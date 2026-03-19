@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import React, { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 
@@ -155,7 +156,9 @@ export default async function Home() {
             </FadeIn>
 
             <ScaleIn delay={0.2} className="w-full max-w-2xl">
-              <SearchBar />
+              <Suspense fallback={<div className="h-14 w-full bg-muted/20 animate-pulse rounded-[1.8rem]" />}>
+                <SearchBar />
+              </Suspense>
 
               {/* Quick Navigation Tags */}
               <div className="flex flex-wrap items-center justify-center gap-3 mt-8">

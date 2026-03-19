@@ -142,9 +142,12 @@ export default async function BrowsePage({
                     </aside>
 
                     <main className="lg:col-span-3 space-y-10">
-
-                        <BrowseToolbar totalResults={resources.length} />
-                        <ActiveFilters />
+                        <Suspense fallback={<div className="h-20 w-full animate-pulse bg-muted/10 rounded-2xl" />}>
+                            <BrowseToolbar totalResults={resources.length} />
+                        </Suspense>
+                        <Suspense fallback={<div className="h-10 w-full animate-pulse bg-muted/5 rounded-xl" />}>
+                            <ActiveFilters />
+                        </Suspense>
 
                         {resources.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
