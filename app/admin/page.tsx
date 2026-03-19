@@ -54,7 +54,11 @@ interface Profile {
     full_name: string
     email: string
     role: string
+    year?: number
+    bio?: string
+    avatar_url?: string
     created_at: string
+    resources?: { count: number }[]
 }
 
 export default function AdminDashboard() {
@@ -71,6 +75,10 @@ export default function AdminDashboard() {
     // UI State
     const [searchQuery, setSearchQuery] = useState('')
     const [isSearchFocused, setIsSearchFocused] = useState(false)
+
+    // User Pagination State
+    const [userPage, setUserPage] = useState(1)
+    const usersPerPage = 5
 
     // Specialty Modal State
     const [isSpecialtyModalOpen, setIsSpecialtyModalOpen] = useState(false)
@@ -92,6 +100,10 @@ export default function AdminDashboard() {
     // Approval Confirmation State
     const [isApproveConfirmOpen, setIsApproveConfirmOpen] = useState(false)
     const [approvingResource, setApprovingResource] = useState<{ id: string, title: string } | null>(null)
+
+
+
+
 
     useEffect(() => {
         async function checkAdminAndLoadData() {
@@ -122,14 +134,14 @@ export default function AdminDashboard() {
                 if (pendingError) throw pendingError
                 setPendingResources(pending || [])
 
-                // Load All Users
+                // Load All Users with upload count
                 const { data: profiles, error: profilesError } = await supabase
                     .from('profiles')
-                    .select('*')
+                    .select('*, resources:resources!resources_uploaded_by_fkey(count)')
                     .order('created_at', { ascending: false })
 
                 if (profilesError) throw profilesError
-                setAllUsers(profiles || [])
+                setAllUsers(profiles as unknown as Profile[])
 
                 // Load Stats
                 const { count: usersCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true })
@@ -149,7 +161,10 @@ export default function AdminDashboard() {
                     totalResources: resourcesCount || 0,
                     specialties: specData?.length || 0
                 })
+
+
             } catch (err: any) {
+
                 console.error("Data load error:", err.message)
                 toast.error("Network issue. Some stats may be missing.")
             } finally {
@@ -296,6 +311,41 @@ export default function AdminDashboard() {
         }
     }
 
+    const handleDeleteResource = async (resource: Resource) => {
+        if (!confirm(`Are you sure you want to PERMANENTLY delete "${resource.title}"? This will also remove the file from storage.`)) return
+
+        try {
+            // 1. Delete from Storage
+            const fileUrl = resource.file_url
+            if (fileUrl) {
+                const path = fileUrl.split('/resources/')[1]
+                if (path) {
+                    await supabase.storage.from('resources').remove([path])
+                }
+            }
+
+            // 2. Delete from DB
+            const { error } = await supabase
+                .from('resources')
+                .delete()
+                .eq('id', resource.id)
+
+            if (error) throw error
+
+            // 3. Update State
+            setPendingResources(prev => prev.filter(r => r.id !== resource.id))
+            setStats(prev => ({ ...prev, totalResources: prev.totalResources - 1 }))
+            if (resource.status === 'pending') {
+                setStats(prev => ({ ...prev, pending: prev.pending - 1 }))
+            }
+            
+            toast.success("Resource permanently deleted")
+        } catch (err: any) {
+            console.error("Delete error:", err)
+            toast.error("Failed to delete resource")
+        }
+    }
+
     const handleRejectClick = (id: string) => {
         setSelectedResourceId(id)
         setIsRejectModalOpen(true)
@@ -324,10 +374,28 @@ export default function AdminDashboard() {
         }
     }
 
-    const filteredUsers = useMemo(() => allUsers.filter(u =>
-        u.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        u.email?.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [allUsers, searchQuery])
+
+
+
+    const filteredUsers = useMemo(() => {
+        // Reset to first page when search query changes
+        return allUsers.filter(u =>
+            u.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    }, [allUsers, searchQuery])
+
+    // Effect to reset page when searching
+    useEffect(() => {
+        setUserPage(1)
+    }, [searchQuery])
+
+    const paginatedUsers = useMemo(() => {
+        const start = (userPage - 1) * usersPerPage
+        return filteredUsers.slice(start, start + usersPerPage)
+    }, [filteredUsers, userPage])
+
+    const totalUserPages = Math.ceil(filteredUsers.length / usersPerPage)
 
     const filteredResources = useMemo(() => pendingResources.filter(r =>
         r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -369,22 +437,25 @@ export default function AdminDashboard() {
                                 <Breadcrumbs />
                                 <div className="flex items-center gap-4">
                                     <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 uppercase tracking-[0.3em] text-[9px] py-1.5 px-5 rounded-full font-black">
-                                        System Command Center
+                                        Admin Panel
                                     </Badge>
                                     <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
                                         <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-green-600">Platform Synchronized</span>
+                                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-green-600">System Active</span>
                                     </div>
                                 </div>
                             </div>
                             <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-[1.1] mb-6">
-                                Workspace <span className="text-primary">Intelligence</span>
+                                Platform <span className="text-primary">Management</span>
                             </h1>
                             <p className="text-lg md:text-xl text-muted-foreground/90 max-w-2xl font-medium leading-relaxed">
-                                Administrative hub for material verification, member auditing, and architectural specialization management.
+                                Control center for reviewing materials, managing members, and organizing study categories.
                             </p>
                         </div>
                     </FadeIn>
+
+
+
 
 
                 </div>
@@ -405,7 +476,7 @@ export default function AdminDashboard() {
                                 <div className="text-7xl font-black text-slate-900 dark:text-white tabular-nums tracking-tighter">{stats.pending}</div>
                                 <div className="flex items-center gap-3 bg-orange-500/10 border border-orange-500/20 px-5 py-2.5 rounded-2xl w-fit">
                                     <Clock className="h-4 w-4 text-orange-500" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-orange-600">Verification Queue</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-orange-600">Waiting for Review</span>
                                 </div>
                             </CardContent>
                         </Card>
@@ -423,7 +494,7 @@ export default function AdminDashboard() {
                                 <div className="text-7xl font-black text-slate-900 dark:text-white tabular-nums tracking-tighter">{stats.totalResources}</div>
                                 <div className="flex items-center gap-3 bg-primary/10 border border-primary/20 px-5 py-2.5 rounded-2xl w-fit">
                                     <FileText className="h-4 w-4 text-primary" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Live Repositories</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Live Materials</span>
                                 </div>
                             </CardContent>
                         </Card>
@@ -441,7 +512,7 @@ export default function AdminDashboard() {
                                 <div className="text-7xl font-black text-slate-900 dark:text-white tabular-nums tracking-tighter">{stats.totalUsers}</div>
                                 <div className="flex items-center gap-3 bg-indigo-500/10 border border-indigo-500/20 px-5 py-2.5 rounded-2xl w-fit">
                                     <UserPlus className="h-4 w-4 text-indigo-500" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Authorized Personnel</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Total Members</span>
                                 </div>
                             </CardContent>
                         </Card>
@@ -454,13 +525,13 @@ export default function AdminDashboard() {
                             <div className="flex flex-col gap-8">
                                 <TabsList className="bg-slate-100/50 dark:bg-white/5 backdrop-blur-md h-auto p-1.5 gap-2 rounded-[2rem] border border-border/40 inline-flex w-fit">
                                     <TabsTrigger value="approvals" className="px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none">
-                                        Inventory Queue
+                                        Review Files
                                     </TabsTrigger>
                                     <TabsTrigger value="specialties" className="px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none">
-                                        Specializations
+                                        Categories
                                     </TabsTrigger>
                                     <TabsTrigger value="users" className="px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none">
-                                        User Registry
+                                        User List
                                     </TabsTrigger>
                                 </TabsList>
                             </div>
@@ -494,12 +565,12 @@ export default function AdminDashboard() {
                                         </div>
 
                                         <Input
-                                            placeholder="SEARCH ADMIN ..."
+                                            placeholder="Search database ..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             onFocus={() => setIsSearchFocused(true)}
                                             onBlur={() => setIsSearchFocused(false)}
-                                            className="flex-1 h-11 border-none bg-transparent focus-visible:ring-0 text-foreground text-[10px] font-black tracking-[0.2em] uppercase placeholder:text-muted-foreground/20 pl-3"
+                                            className="flex-1 h-11 border-none bg-transparent focus-visible:ring-0 text-foreground text-[10px] font-bold tracking-[0.1em] placeholder:text-muted-foreground/30 pl-3"
                                         />
 
                                         {searchQuery && (
@@ -547,8 +618,8 @@ export default function AdminDashboard() {
                                                     <ShieldCheck className="h-16 w-16 text-primary/30" />
                                                 </div>
                                                 <div className="space-y-3">
-                                                    <p className="text-3xl font-black tracking-tighter uppercase">Verification Null</p>
-                                                    <p className="text-[11px] font-bold text-muted-foreground/60 max-w-xs mx-auto uppercase tracking-widest italic">All diagnostic materials have been successfully synchronized.</p>
+                                                    <p className="text-3xl font-black tracking-tighter uppercase">No Pending Files</p>
+                                                    <p className="text-[11px] font-bold text-muted-foreground/60 max-w-xs mx-auto uppercase tracking-widest italic">Everything has been reviewed and processed.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -605,21 +676,29 @@ export default function AdminDashboard() {
                                                             </div>
                                                             <div className="h-6 w-[1px] bg-border/40 mx-1" />
                                                             <div className="flex gap-2">
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    className="h-10 w-10 rounded-xl hover:bg-red-500/10 hover:text-red-500 text-muted-foreground/20 border border-transparent hover:border-red-500/20 transition-all active:scale-90"
-                                                                    onClick={() => handleRejectClick(resource.id)}
-                                                                >
-                                                                    <X className="h-4 w-4" />
-                                                                </Button>
-                                                                <Button
-                                                                    className="h-10 px-6 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black text-[9px] uppercase tracking-[0.2em] shadow-lg hover:bg-primary hover:text-white transition-all active:scale-95 border-none"
-                                                                    onClick={() => handleApprove(resource.id, resource.title)}
-                                                                >
-                                                                    <Check className="mr-2 h-3.5 w-3.5" />
-                                                                    Approve
-                                                                </Button>
+                                                                 <Button
+                                                                     variant="ghost"
+                                                                     size="icon"
+                                                                     className="h-10 w-10 rounded-xl hover:bg-red-500/10 hover:text-red-500 text-muted-foreground/20 border border-transparent hover:border-red-500/20 transition-all active:scale-90"
+                                                                     onClick={() => handleRejectClick(resource.id)}
+                                                                 >
+                                                                     <X className="h-4 w-4" />
+                                                                 </Button>
+                                                                 <Button
+                                                                     variant="ghost"
+                                                                     size="icon"
+                                                                     className="h-10 w-10 rounded-xl hover:bg-red-500/10 hover:text-red-500 text-muted-foreground/20 border border-transparent hover:border-red-500/20 transition-all active:scale-90"
+                                                                     onClick={() => handleDeleteResource(resource)}
+                                                                 >
+                                                                     <Trash2 className="h-4 w-4" />
+                                                                 </Button>
+                                                                 <Button
+                                                                     className="h-10 px-6 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black text-[9px] uppercase tracking-[0.2em] shadow-lg hover:bg-primary hover:text-white transition-all active:scale-95 border-none"
+                                                                     onClick={() => handleApprove(resource.id, resource.title)}
+                                                                 >
+                                                                     <Check className="mr-2 h-3.5 w-3.5" />
+                                                                     Approve
+                                                                 </Button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -726,36 +805,50 @@ export default function AdminDashboard() {
 
                         <TabsContent value="users" className="mt-0 outline-none">
                             <FadeIn delay={0.7}>
-                                <div className="space-y-4">
+                                <div className="space-y-8">
+
+
                                     {filteredUsers.length === 0 ? (
                                         <div className="bg-white dark:bg-card border border-border/40 rounded-[3rem] p-40 text-center shadow-[0_20px_60px_rgba(0,0,0,0.03)]">
                                             <div className="flex flex-col items-center gap-8">
                                                 <div className="bg-slate-100 dark:bg-slate-900 p-12 rounded-full w-28 h-28 flex items-center justify-center mx-auto border border-dashed border-border">
                                                     <Search className="h-10 w-10 text-muted-foreground/20" />
+
                                                 </div>
                                                 <p className="text-3xl font-black tracking-tighter uppercase whitespace-nowrap">Directory Empty</p>
                                             </div>
                                         </div>
                                     ) : (
                                         <div className="grid gap-4">
-                                            {filteredUsers.map((profile: Profile) => (
+                                            {paginatedUsers.map((profile: Profile) => (
                                                 <motion.div
                                                     key={profile.id}
                                                     layout
-                                                    className="group bg-white dark:bg-slate-900/40 backdrop-blur-3xl border border-border/40 rounded-2xl p-4 px-6 hover:border-primary/40 transition-all duration-500"
+                                                    className="group bg-white dark:bg-slate-900/40 backdrop-blur-3xl border border-border/40 rounded-xl p-2.5 px-6 hover:border-primary/40 transition-all duration-500"
                                                 >
                                                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                                        <div className="flex items-center gap-5">
-                                                            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/20 flex items-center justify-center font-black text-primary text-xl shadow-inner group-hover:scale-105 transition-all duration-500 shrink-0">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/20 flex items-center justify-center font-black text-primary text-base shadow-inner group-hover:scale-105 transition-all duration-500 shrink-0">
                                                                 {profile.full_name?.charAt(0) || 'U'}
                                                             </div>
-                                                            <div className="space-y-1">
+                                                            <div className="space-y-0.5">
                                                                 <div className="flex items-center gap-3">
-                                                                    <h3 className="text-lg font-black tracking-tighter uppercase text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                                                                        {profile.full_name || 'Anonymous User'}
-                                                                    </h3>
+                                                                    <div className="flex items-center gap-2.5">
+                                                                        <h3 className="text-base font-black tracking-tighter uppercase text-slate-900 dark:text-white group-hover:text-primary transition-colors flex items-center gap-2">
+                                                                            <span>{profile.full_name || 'Anonymous User'}</span>
+                                                                            {profile.year ? (
+                                                                                <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] h-4 px-1.5 font-bold uppercase tracking-widest shrink-0">
+                                                                                    YR-{profile.year}
+                                                                                </Badge>
+                                                                            ) : (
+                                                                                <span className="text-[7px] font-black text-muted-foreground/10 uppercase tracking-widest shrink-0">
+                                                                                    --
+                                                                                </span>
+                                                                            )}
+                                                                        </h3>
+                                                                    </div>
                                                                     <Badge variant="outline" className={cn(
-                                                                        "font-black text-[8px] border-none rounded-full px-2 py-0 uppercase tracking-widest",
+                                                                        "font-black text-[7px] border-none rounded-full px-1.5 py-0 uppercase tracking-widest",
                                                                         profile.role === 'admin'
                                                                             ? "bg-primary text-white"
                                                                             : "bg-slate-100 dark:bg-white/5 text-muted-foreground/60"
@@ -763,8 +856,8 @@ export default function AdminDashboard() {
                                                                         {profile.role === 'admin' ? 'Root' : 'Member'}
                                                                     </Badge>
                                                                 </div>
-                                                                <div className="flex items-center gap-2 text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">
-                                                                    <Mail className="h-3 w-3" />
+                                                                <div className="flex items-center gap-2 text-[8px] font-black text-muted-foreground/30 uppercase tracking-widest">
+                                                                    <Mail className="h-2.5 w-2.5" />
                                                                     {profile.email}
                                                                 </div>
                                                             </div>
@@ -772,27 +865,70 @@ export default function AdminDashboard() {
 
                                                         <div className="flex items-center gap-6">
                                                             <div className="hidden lg:flex flex-col gap-0.5 items-end">
-                                                                <span className="text-[7px] font-black text-muted-foreground/30 uppercase tracking-[0.2em]">Joined</span>
-                                                                <span className="text-[9px] font-black text-muted-foreground/60 tracking-widest uppercase tabular-nums">
+                                                                <span className="text-[7px] font-black text-muted-foreground/25 uppercase tracking-[0.2em]">Joined</span>
+                                                                <span className="text-[8px] font-black text-muted-foreground/50 tracking-widest uppercase tabular-nums">
                                                                     {new Date(profile.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })}
                                                                 </span>
                                                             </div>
 
-                                                            <div className="h-6 w-[1px] bg-border/20" />
+                                                            <div className="h-5 w-[1px] bg-border/20" />
 
                                                             <div className="flex items-center gap-4">
-                                                                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/5 rounded-xl border border-green-500/10">
-                                                                    <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                                                                    <span className="text-[8px] font-black text-green-600 uppercase tracking-widest">Active</span>
+                                                                <div className="flex items-center gap-2 px-2.5 py-1 bg-green-500/5 rounded-lg border border-green-500/10">
+                                                                    <div className="h-1 w-1 rounded-full bg-green-500 animate-pulse" />
+                                                                    <span className="text-[7px] font-black text-green-600 uppercase tracking-widest">Active</span>
                                                                 </div>
-                                                                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-all active:scale-95 text-muted-foreground/20 hover:text-primary">
-                                                                    <MoreVertical className="h-5 w-5" />
-                                                                </Button>
+                                                                {/* Removed MoreVertical menu as requested */}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </motion.div>
                                             ))}
+
+                                            {/* User Pagination Controls */}
+                                            {totalUserPages > 1 && (
+                                                <div className="flex items-center justify-between pt-8 px-2">
+                                                    <div className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest">
+                                                        Showing <span className="text-foreground">{(userPage - 1) * usersPerPage + 1}</span> - <span className="text-foreground">{Math.min(userPage * usersPerPage, filteredUsers.length)}</span> of <span className="text-foreground">{filteredUsers.length}</span> members
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            disabled={userPage === 1}
+                                                            onClick={() => setUserPage(p => Math.max(1, p - 1))}
+                                                            className="h-10 px-5 rounded-xl border-border/40 text-[9px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-white/5 transition-all active:scale-95 disabled:opacity-30"
+                                                        >
+                                                            Prev
+                                                        </Button>
+                                                        <div className="flex items-center gap-1 mx-2">
+                                                            {Array.from({ length: totalUserPages }, (_, i) => i + 1).map((p) => (
+                                                                <button
+                                                                    key={p}
+                                                                    onClick={() => setUserPage(p)}
+                                                                    className={cn(
+                                                                        "h-8 w-8 rounded-lg text-[10px] font-black transition-all",
+                                                                        userPage === p 
+                                                                            ? "bg-primary text-white shadow-lg shadow-primary/20 scale-110" 
+                                                                            : "text-muted-foreground/40 hover:bg-slate-100 dark:hover:bg-white/5"
+                                                                    )}
+                                                                >
+                                                                    {p}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            disabled={userPage === totalUserPages}
+                                                            onClick={() => setUserPage(p => Math.min(totalUserPages, p + 1))}
+                                                            className="h-10 px-5 rounded-xl border-border/40 text-[9px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-white/5 transition-all active:scale-95 disabled:opacity-30"
+                                                        >
+                                                            Next
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -1040,3 +1176,4 @@ export default function AdminDashboard() {
         </div>
     )
 }
+

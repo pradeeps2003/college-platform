@@ -1,5 +1,7 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+
 import { SearchBar } from '@/components/search-bar'
 import {
   Stethoscope,
@@ -35,7 +37,18 @@ const getIconComponent = (iconName: string, className: string = "h-5 w-5 text-pr
 }
 
 async function getLanderData() {
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  // If admin, redirect to admin dashboard
+  if (user) {
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    if (profile?.role === 'admin') {
+      redirect('/admin')
+    }
+  }
+
   const { count: resourcesCount } = await supabase.from('resources').select('*', { count: 'exact', head: true }).eq('status', 'approved')
+
   const { count: usersCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true })
   
   // Fetch dynamic specialties
@@ -221,3 +234,4 @@ export default async function Home() {
     </div>
   )
 }
+

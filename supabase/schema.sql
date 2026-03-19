@@ -6,6 +6,8 @@ CREATE TABLE profiles (
   role TEXT DEFAULT 'student' CHECK (role IN ('student', 'admin')),
   department TEXT,
   year INTEGER,
+  bio TEXT,
+  avatar_url TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -64,6 +66,10 @@ ALTER TABLE downloads ENABLE ROW LEVEL SECURITY;
 -- Profiles: Users can read all, update own
 CREATE POLICY "Public profiles viewable by all" ON profiles FOR SELECT USING (true);
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Admins can update all profiles" ON profiles FOR UPDATE USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+
 
 -- Function to handle new user profile creation
 CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -120,7 +126,51 @@ CREATE POLICY "Authenticated users can upload" ON storage.objects FOR INSERT
 CREATE POLICY "Users can read files" ON storage.objects FOR SELECT 
   USING (bucket_id = 'resources');
 
+
 -- Allow admins to delete
 CREATE POLICY "Admins can delete files" ON storage.objects FOR DELETE 
   USING (bucket_id = 'resources' AND 
          EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- System settings to track platform state
+CREATE TABLE IF NOT EXISTS public.system_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_by UUID REFERENCES public.profiles(id)
+);
+
+-- Initialize with current year to avoid accidental immediate promotion
+INSERT INTO public.system_settings (key, value) 
+VALUES ('last_academic_promotion', EXTRACT(YEAR FROM NOW())::text)
+ON CONFLICT (key) DO NOTHING;
+
+-- Function to advance the academic year for all students
+CREATE OR REPLACE FUNCTION public.advance_academic_year()
+RETURNS void AS $$
+DECLARE
+    current_yr INT;
+BEGIN
+  -- Increment year
+  UPDATE public.profiles
+  SET year = year + 1
+  WHERE role = 'student' AND year IS NOT NULL;
+  
+  -- Record the promotion
+  current_yr := EXTRACT(YEAR FROM NOW())::INT;
+  INSERT INTO public.system_settings (key, value, updated_at)
+  VALUES ('last_academic_promotion', current_yr::text, NOW())
+  ON CONFLICT (key) DO UPDATE SET value = current_yr::text, updated_at = NOW();
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+
+-- System settings policies
+ALTER TABLE public.system_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Admins can manage settings" ON public.system_settings 
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+CREATE POLICY "Public settings viewable by admins" ON public.system_settings FOR SELECT 
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));

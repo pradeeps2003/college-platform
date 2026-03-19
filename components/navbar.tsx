@@ -14,25 +14,33 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Stethoscope, Activity, LogOut, Upload, User as UserIcon, LayoutDashboard, Globe, ShieldCheck } from 'lucide-react'
+import { Stethoscope, Activity, LogOut, Upload, User as UserIcon, LayoutDashboard, Globe, ShieldCheck, Settings as SettingsIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
 export function Navbar() {
     const { user, signOut } = useAuth()
     const pathname = usePathname()
-    const [role, setRole] = useState<string | null>(null)
+    const [profile, setProfile] = useState<{ role: string | null; full_name: string | null; avatar_url: string | null }>({
+        role: null,
+        full_name: null,
+        avatar_url: null
+    })
 
     useEffect(() => {
         if (user) {
             supabase
                 .from('profiles')
-                .select('role')
+                .select('role, full_name, avatar_url')
                 .eq('id', user.id)
                 .single()
-                .then(({ data }) => setRole(data?.role || null))
+                .then(({ data }) => setProfile({
+                    role: data?.role || null,
+                    full_name: data?.full_name || null,
+                    avatar_url: data?.avatar_url || null
+                }))
         } else {
-            setRole(null)
+            setProfile({ role: null, full_name: null, avatar_url: null })
         }
     }, [user])
 
@@ -59,9 +67,9 @@ export function Navbar() {
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" className="relative h-10 w-10 rounded-full border border-border/50 p-0 hover:bg-primary/5">
                                         <Avatar className="h-9 w-9">
-                                            <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email || ''} />
+                                            <AvatarImage src={(profile.avatar_url || user.user_metadata?.avatar_url) || undefined} alt={user.email || ''} />
                                             <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                                                {user.email?.charAt(0).toUpperCase()}
+                                                {(profile.full_name || user.email)?.charAt(0).toUpperCase()}
                                             </AvatarFallback>
                                         </Avatar>
                                     </Button>
@@ -69,7 +77,7 @@ export function Navbar() {
                                 <DropdownMenuContent className="w-56 mt-2" align="end" forceMount>
                                     <DropdownMenuLabel className="font-normal">
                                         <div className="flex flex-col space-y-1">
-                                            <p className="text-sm font-semibold leading-none">{user.user_metadata?.full_name || 'Medical User'}</p>
+                                            <p className="text-sm font-semibold leading-none">{profile.full_name || user.user_metadata?.full_name || 'Medical User'}</p>
                                             <p className="text-xs leading-none text-muted-foreground">
                                                 {user.email}
                                             </p>
@@ -77,7 +85,7 @@ export function Navbar() {
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
 
-                                    {role === 'admin' ? (
+                                    {profile.role === 'admin' ? (
                                         <DropdownMenuItem asChild className="cursor-pointer focus:bg-primary/5 focus:text-primary">
                                             <Link href="/admin" className="flex items-center font-bold">
                                                 <ShieldCheck className="mr-2 h-4 w-4 text-primary" />
@@ -97,6 +105,13 @@ export function Navbar() {
                                         <Link href="/my-uploads" className="flex items-center">
                                             <Upload className="mr-2 h-4 w-4" />
                                             My Resources
+                                        </Link>
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem asChild className="cursor-pointer focus:bg-primary/5 focus:text-primary">
+                                        <Link href="/settings" className="flex items-center">
+                                            <SettingsIcon className="mr-2 h-4 w-4" />
+                                            Settings
                                         </Link>
                                     </DropdownMenuItem>
 

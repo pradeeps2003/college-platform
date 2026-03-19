@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Activity, ArrowRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { SlideIn } from '@/components/motion-wrapper'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -19,7 +17,7 @@ interface DomainGridProps {
 }
 
 export function DomainGrid({ specialties, specialtyCounts }: DomainGridProps) {
-    const [showAll, setShowAll] = useState(false)
+    const [showAll] = useState(false)
 
     const visibleSpecialties = showAll ? specialties : specialties.slice(0, 8)
 
@@ -71,27 +69,6 @@ export function DomainGrid({ specialties, specialtyCounts }: DomainGridProps) {
                     ))}
                 </AnimatePresence>
             </motion.div>
-
-            <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-6">
-                {!showAll ? (
-                    <Button
-                        onClick={() => setShowAll(true)}
-                        className="rounded-2xl px-10 h-14 bg-primary hover:bg-primary/90 text-white border-transparent dark:bg-white/5 dark:text-white dark:border dark:border-white/10 dark:hover:bg-primary/10 dark:backdrop-blur-md font-bold text-xs shadow-xl shadow-primary/20 dark:shadow-none transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest"
-                    >
-                        View All Subjects
-                        <ArrowRight className="ml-3 h-4 w-4" />
-                    </Button>
-                ) : (
-                    <Link href="/browse">
-                        <Button 
-                            className="rounded-2xl px-10 h-14 bg-primary hover:bg-primary/90 text-white border border-transparent dark:bg-white/5 dark:text-white dark:border-white/10 dark:hover:bg-primary/10 dark:backdrop-blur-md font-bold text-xs shadow-xl shadow-primary/20 dark:shadow-none transition-all hover:translate-x-1 active:scale-95 uppercase tracking-widest"
-                        >
-                            Explore All Materials
-                            <Activity className="ml-3 h-4 w-4" />
-                        </Button>
-                    </Link>
-                )}
-            </div>
         </div>
     )
 }

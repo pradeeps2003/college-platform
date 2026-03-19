@@ -36,9 +36,12 @@ import {
     Archive,
     Search,
     Filter,
-    ArrowUpRight
+    ArrowUpRight,
+    Trash2,
+    Loader2
 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import { toast } from 'sonner'
 import { FadeIn, SlideIn, ScaleIn } from '@/components/motion-wrapper'
 import { cn } from '@/lib/utils'
 
@@ -73,6 +76,37 @@ export default function MyUploadsPage() {
 
         loadUploads()
     }, [user])
+
+    const handleDeleteResource = async (resource: Resource) => {
+        if (!confirm(`Are you sure you want to delete "${resource.title}"? This cannot be undone.`)) return
+
+        try {
+            // 1. Delete from Storage
+            const fileUrl = resource.file_url
+            if (fileUrl) {
+                const path = fileUrl.split('/resources/')[1]
+                if (path) {
+                    await supabase.storage.from('resources').remove([path])
+                }
+            }
+
+            // 2. Delete from DB
+            const { error } = await supabase
+                .from('resources')
+                .delete()
+                .eq('id', resource.id)
+
+            if (error) throw error
+
+            // 3. Update State
+            setUploads(prev => prev.filter(r => r.id !== resource.id))
+            toast.success("Document deleted successfully")
+            setIsDialogOpen(false)
+        } catch (err: any) {
+            console.error("Delete error:", err)
+            toast.error("Failed to delete document")
+        }
+    }
 
 
 
@@ -219,14 +253,24 @@ export default function MyUploadsPage() {
                                                 </div>
                                             </TableCell>
                                             <TableCell className="text-right px-8">
-                                                <Button 
-                                                    variant="ghost" 
-                                                    size="icon" 
-                                                    onClick={() => handleOpenDialog(resource)}
-                                                    className="h-11 w-11 rounded-2xl hover:bg-primary/5 hover:text-primary transition-all active:scale-90 border border-transparent hover:border-primary/20"
-                                                >
-                                                    <Eye className="h-5 w-5" />
-                                                </Button>
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <Button 
+                                                        variant="ghost" 
+                                                        size="icon" 
+                                                        onClick={() => handleOpenDialog(resource)}
+                                                        className="h-11 w-11 rounded-2xl hover:bg-primary/5 hover:text-primary transition-all active:scale-90 border border-transparent hover:border-primary/20"
+                                                    >
+                                                        <Eye className="h-5 w-5" />
+                                                    </Button>
+                                                    <Button 
+                                                        variant="ghost" 
+                                                        size="icon" 
+                                                        onClick={() => handleDeleteResource(resource)}
+                                                        className="h-11 w-11 rounded-2xl hover:bg-red-500/5 hover:text-red-500 transition-all active:scale-90 border border-transparent hover:border-red-500/20"
+                                                    >
+                                                        <Trash2 className="h-5 w-5" />
+                                                    </Button>
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     ))
@@ -307,7 +351,15 @@ export default function MyUploadsPage() {
                                 </div>
                             </div>
 
-                            <DialogFooter className="pt-2">
+                            <DialogFooter className="pt-2 flex flex-col gap-2">
+                                <Button 
+                                    variant="outline" 
+                                    onClick={() => selectedDocument && handleDeleteResource(selectedDocument)}
+                                    className="w-full h-11 rounded-2xl font-bold border-red-500/20 text-red-500 hover:bg-red-500/5 transition-all text-xs uppercase tracking-widest"
+                                >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete Document
+                                </Button>
                                 <DialogClose asChild>
                                     <Button variant="ghost" className="w-full h-11 rounded-2xl font-bold hover:bg-slate-100 dark:hover:bg-white/5 transition-all text-xs uppercase tracking-widest text-muted-foreground/60">
                                         Dismiss

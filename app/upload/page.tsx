@@ -17,6 +17,7 @@ import { X, Loader2, UploadCloud, FileText, Paperclip, Activity, Stethoscope, Ch
 import { FadeIn, SlideIn, ScaleIn } from '@/components/motion-wrapper'
 import Link from 'next/link'
 import { Breadcrumbs } from '@/components/breadcrumbs'
+import { compressImage } from '@/lib/utils'
 
 export default function UploadPage() {
     const { user } = useAuth()
@@ -72,6 +73,17 @@ export default function UploadPage() {
         setLoading(true)
 
         try {
+            let fileToUpload = file
+
+            // If it's an image, compress it before upload
+            if (fileToUpload.type.startsWith('image/')) {
+                try {
+                    fileToUpload = await compressImage(fileToUpload, { maxWidth: 1600, maxHeight: 1600, quality: 0.85 })
+                } catch (err) {
+                    console.error("Compression failed, using original:", err)
+                }
+            }
+
             // 0. Ensure Profile Exists
             const { data: existingProfile } = await supabase
                 .from('profiles')
@@ -93,12 +105,12 @@ export default function UploadPage() {
             }
 
             // 1. Upload to Storage
-            const fileExt = file.name.split('.').pop()
+            const fileExt = fileToUpload.name.split('.').pop()
             const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
 
             const { data: uploadData, error: uploadError } = await supabase.storage
                 .from('resources')
-                .upload(fileName, file)
+                .upload(fileName, fileToUpload)
 
             if (uploadError) throw uploadError
 
@@ -117,9 +129,9 @@ export default function UploadPage() {
                     semester: parseInt(semester),
                     department,
                     file_url: publicUrl,
-                    file_name: file.name,
-                    file_type: file.type,
-                    file_size: file.size,
+                    file_name: fileToUpload.name,
+                    file_type: fileToUpload.type,
+                    file_size: fileToUpload.size,
                     uploaded_by: user.id,
                     status: 'pending',
                     tags,
@@ -198,7 +210,7 @@ export default function UploadPage() {
                                     <div className="bg-white dark:bg-slate-900 rounded-[1.9rem] overflow-hidden">
                                         <FileUploader
                                             onFileSelect={setFile}
-                                            accept=".pdf,.docx,.pptx,.txt,.zip"
+                                            accept=".pdf,.docx,.pptx,.txt,.zip,.jpg,.jpeg,.png,.gif"
                                             maxSizeMB={20}
                                         />
                                     </div>
