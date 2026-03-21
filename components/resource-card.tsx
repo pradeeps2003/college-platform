@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { 
@@ -11,7 +10,6 @@ import {
     Activity,
     ShieldCheck,
     HardDrive,
-    ArrowRight,
     Loader2,
     User,
     Calendar,

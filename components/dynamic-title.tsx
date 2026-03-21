@@ -3,20 +3,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const phrases = [
-    { text: 'Medical Minds.', color: 'from-primary via-primary/70 to-primary' },
-    { text: 'Expert Doctors.', color: 'from-blue-600 via-blue-400 to-blue-600' },
-    { text: 'Clinical Research.', color: 'from-emerald-600 via-emerald-400 to-emerald-600' },
-    { text: 'Healthcare Pros.', color: 'from-indigo-600 via-indigo-400 to-indigo-600' },
-]
-
-const browsePhrases = [
-    { text: 'Resource Library.', color: 'from-primary via-primary/70 to-primary' },
-    { text: 'Knowledge Base.', color: 'from-blue-600 via-blue-400 to-blue-600' },
-    { text: 'Academic Records.', color: 'from-emerald-600 via-emerald-400 to-emerald-600' },
-    { text: 'Expert Insights.', color: 'from-indigo-600 via-indigo-400 to-indigo-600' },
-]
-
 interface Phrase {
     text: string
     color: string

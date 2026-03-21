@@ -1,8 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { Activity } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 import { BrowseSearch } from '@/components/browse-search'
 
 interface BrowseToolbarProps {

@@ -25,24 +25,17 @@ import {
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { 
     Eye, 
     FileText, 
-    CheckCircle2, 
-    Clock, 
     TrendingUp, 
     Plus,
     Archive,
-    Search,
-    Filter,
-    ArrowUpRight,
-    Trash2,
-    Loader2
+    Trash2
 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { toast } from 'sonner'
-import { FadeIn, SlideIn, ScaleIn } from '@/components/motion-wrapper'
+import { FadeIn, ScaleIn } from '@/components/motion-wrapper'
 import { cn } from '@/lib/utils'
 
 export default function MyUploadsPage() {
@@ -102,7 +95,7 @@ export default function MyUploadsPage() {
             setUploads(prev => prev.filter(r => r.id !== resource.id))
             toast.success("Document deleted successfully")
             setIsDialogOpen(false)
-        } catch (err: any) {
+        } catch (err) {
             console.error("Delete error:", err)
             toast.error("Failed to delete document")
         }
@@ -208,7 +201,7 @@ export default function MyUploadsPage() {
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    uploads.map((resource, index) => (
+                                    uploads.map((resource) => (
                                         <TableRow 
                                             key={resource.id} 
                                             className="border-border/40 hover:bg-white/50 dark:hover:bg-white/5 transition-colors group"

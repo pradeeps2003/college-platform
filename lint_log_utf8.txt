@@ -1,0 +1,218 @@
+﻿
+> college-platform@0.1.0 lint
+> eslint
+
+
+D:\CMC\college-platform\app\admin\page.tsx
+     9:29   warning  'CardDescription' is defined but never used                      @typescript-eslint/no-unused-vars
+    15:5    warning  'Table' is defined but never used                                @typescript-eslint/no-unused-vars
+    16:5    warning  'TableBody' is defined but never used                            @typescript-eslint/no-unused-vars
+    17:5    warning  'TableCell' is defined but never used                            @typescript-eslint/no-unused-vars
+    18:5    warning  'TableHead' is defined but never used                            @typescript-eslint/no-unused-vars
+    19:5    warning  'TableHeader' is defined but never used                          @typescript-eslint/no-unused-vars
+    20:5    warning  'TableRow' is defined but never used                             @typescript-eslint/no-unused-vars
+    32:41   warning  'Library' is defined but never used                              @typescript-eslint/no-unused-vars
+    33:25   warning  'Filter' is defined but never used                               @typescript-eslint/no-unused-vars
+    33:33   warning  'MoreVertical' is defined but never used                         @typescript-eslint/no-unused-vars
+    41:18   warning  'SlideIn' is defined but never used                              @typescript-eslint/no-unused-vars
+    47:39   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   166:27   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   249:34   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   343:23   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   739:69   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  1103:102  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  1103:129  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  1150:113  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  1150:134  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+D:\CMC\college-platform\app\auth\forgot-password\page.tsx
+  34:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\auth\login\page.tsx
+   40:25  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  124:36  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\CMC\college-platform\app\auth\reset-password\page.tsx
+   3:20  warning  'useEffect' is defined but never used     @typescript-eslint/no-unused-vars
+   9:46  warning  'CardFooter' is defined but never used    @typescript-eslint/no-unused-vars
+  10:47  warning  'ShieldCheck' is defined but never used   @typescript-eslint/no-unused-vars
+  44:25  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\auth\signup\page.tsx
+  12:23  warning  'ShieldCheck' is defined but never used    @typescript-eslint/no-unused-vars
+  12:36  warning  'UserCircle2' is defined but never used    @typescript-eslint/no-unused-vars
+  12:49  warning  'GraduationCap' is defined but never used  @typescript-eslint/no-unused-vars
+  12:64  warning  'Building2' is defined but never used      @typescript-eslint/no-unused-vars
+  22:12  warning  'role' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  58:25  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\favorites\page.tsx
+  19:27  warning  'error' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  32:51  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\my-uploads\page.tsx
+   28:10  warning  'Card' is defined but never used          @typescript-eslint/no-unused-vars
+   28:16  warning  'CardContent' is defined but never used   @typescript-eslint/no-unused-vars
+   32:5   warning  'CheckCircle2' is defined but never used  @typescript-eslint/no-unused-vars
+   33:5   warning  'Clock' is defined but never used         @typescript-eslint/no-unused-vars
+   37:5   warning  'Search' is defined but never used        @typescript-eslint/no-unused-vars
+   38:5   warning  'Filter' is defined but never used        @typescript-eslint/no-unused-vars
+   39:5   warning  'ArrowUpRight' is defined but never used  @typescript-eslint/no-unused-vars
+   41:5   warning  'Loader2' is defined but never used       @typescript-eslint/no-unused-vars
+   45:18  warning  'SlideIn' is defined but never used       @typescript-eslint/no-unused-vars
+  105:23  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  211:60  warning  'index' is defined but never used         @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\app\page.tsx
+  19:3   warning  'ShieldCheck' is defined but never used   @typescript-eslint/no-unused-vars
+  33:33  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  60:74  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\resources\[id]\page.tsx
+   9:10  warning  'Card' is defined but never used              @typescript-eslint/no-unused-vars
+   9:16  warning  'CardContent' is defined but never used       @typescript-eslint/no-unused-vars
+   9:29  warning  'CardHeader' is defined but never used        @typescript-eslint/no-unused-vars
+   9:41  warning  'CardTitle' is defined but never used         @typescript-eslint/no-unused-vars
+  10:10  warning  'Download' is defined but never used          @typescript-eslint/no-unused-vars
+  10:26  warning  'Calendar' is defined but never used          @typescript-eslint/no-unused-vars
+  11:10  warning  'AnatomicalHeart' is defined but never used   @typescript-eslint/no-unused-vars
+  14:10  warning  'toast' is defined but never used             @typescript-eslint/no-unused-vars
+  15:18  warning  'ScaleIn' is defined but never used           @typescript-eslint/no-unused-vars
+  18:41  warning  'Clock' is defined but never used             @typescript-eslint/no-unused-vars
+  18:48  warning  'CheckCircle2' is defined but never used      @typescript-eslint/no-unused-vars
+  26:12  warning  'isAdmin' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\app\settings\page.tsx
+   15:10  warning  'cn' is defined but never used               @typescript-eslint/no-unused-vars
+   20:18  warning  'AnimatePresence' is defined but never used  @typescript-eslint/no-unused-vars
+   21:27  warning  'ScaleIn' is defined but never used          @typescript-eslint/no-unused-vars
+   64:27  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  149:23  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  185:23  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  306:62  warning  'err' is defined but never used              @typescript-eslint/no-unused-vars
+  306:67  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\upload\page.tsx
+   12:29  warning  'CardDescription' is defined but never used      @typescript-eslint/no-unused-vars
+   12:46  warning  'CardHeader' is defined but never used           @typescript-eslint/no-unused-vars
+   12:58  warning  'CardTitle' is defined but never used            @typescript-eslint/no-unused-vars
+   16:56  warning  'Activity' is defined but never used             @typescript-eslint/no-unused-vars
+   16:66  warning  'Stethoscope' is defined but never used          @typescript-eslint/no-unused-vars
+   16:79  warning  'ChevronLeft' is defined but never used          @typescript-eslint/no-unused-vars
+   17:18  warning  'SlideIn' is defined but never used              @typescript-eslint/no-unused-vars
+   18:8   warning  'Link' is defined but never used                 @typescript-eslint/no-unused-vars
+  111:27  warning  'uploadData' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  148:25  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\components\breadcrumbs.tsx
+  6:10  warning  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\browse-search.tsx
+  13:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\CMC\college-platform\components\browse-search.tsx:13:9
+  11 |
+  12 |     useEffect(() => {
+> 13 |         setQuery(searchParams.get('q') || '')
+     |         ^^^^^^^^ Avoid calling setState() directly within an effect
+  14 |     }, [searchParams])
+  15 |
+  16 |     const handleSubmit = (e: React.FormEvent) => {  react-hooks/set-state-in-effect
+
+D:\CMC\college-platform\components\browse-toolbar.tsx
+  3:10  warning  'useRouter' is defined but never used  @typescript-eslint/no-unused-vars
+  4:10  warning  'motion' is defined but never used     @typescript-eslint/no-unused-vars
+  5:10  warning  'Activity' is defined but never used   @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\domain-grid.tsx
+  5:10  warning  'SlideIn' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\dynamic-title.tsx
+   6:7  warning  'phrases' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  13:7  warning  'browsePhrases' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\file-uploader.tsx
+  5:39  warning  'ShieldCheck' is defined but never used  @typescript-eslint/no-unused-vars
+  5:52  warning  'Activity' is defined but never used     @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\filter-sidebar.tsx
+   4:10  warning  'Label' is defined but never used              @typescript-eslint/no-unused-vars
+   5:10  warning  'RadioGroup' is defined but never used         @typescript-eslint/no-unused-vars
+   5:22  warning  'RadioGroupItem' is defined but never used     @typescript-eslint/no-unused-vars
+   6:10  warning  'Button' is defined but never used             @typescript-eslint/no-unused-vars
+  10:5   warning  'Stethoscope' is defined but never used        @typescript-eslint/no-unused-vars
+  11:5   warning  'GraduationCap' is defined but never used      @typescript-eslint/no-unused-vars
+  13:5   warning  'Activity' is defined but never used           @typescript-eslint/no-unused-vars
+  14:5   warning  'HeartPulse' is defined but never used         @typescript-eslint/no-unused-vars
+  15:5   warning  'Dna' is defined but never used                @typescript-eslint/no-unused-vars
+  16:5   warning  'Microscope' is defined but never used         @typescript-eslint/no-unused-vars
+  17:5   warning  'Pill' is defined but never used               @typescript-eslint/no-unused-vars
+  18:5   warning  'FlaskConical' is defined but never used       @typescript-eslint/no-unused-vars
+  19:5   warning  'Syringe' is defined but never used            @typescript-eslint/no-unused-vars
+  20:5   warning  'Baby' is defined but never used               @typescript-eslint/no-unused-vars
+  21:5   warning  'Brain' is defined but never used              @typescript-eslint/no-unused-vars
+  22:5   warning  'Radiation' is defined but never used          @typescript-eslint/no-unused-vars
+  25:5   warning  'Video' is defined but never used              @typescript-eslint/no-unused-vars
+  26:5   warning  'Music' is defined but never used              @typescript-eslint/no-unused-vars
+  27:5   warning  'Search' is defined but never used             @typescript-eslint/no-unused-vars
+  28:5   warning  'ChevronDown' is defined but never used        @typescript-eslint/no-unused-vars
+  30:5   warning  'BookOpen' is defined but never used           @typescript-eslint/no-unused-vars
+  31:5   warning  'Tags' is defined but never used               @typescript-eslint/no-unused-vars
+  34:5   warning  'SlidersHorizontal' is defined but never used  @typescript-eslint/no-unused-vars
+  36:10  warning  'AnatomicalHeart' is defined but never used    @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\navbar.tsx
+  17:23  warning  'Activity' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  17:57  warning  'UserIcon' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  17:84  warning  'Globe' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  23:11  warning  'pathname' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  43:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\CMC\college-platform\components\navbar.tsx:43:13
+  41 |                 }))
+  42 |         } else {
+> 43 |             setProfile({ role: null, full_name: null, avatar_url: null })
+     |             ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  44 |         }
+  45 |     }, [user])
+  46 |  react-hooks/set-state-in-effect
+
+D:\CMC\college-platform\components\resource-card.tsx
+   3:8  warning  'Link' is defined but never used        @typescript-eslint/no-unused-vars
+  14:5  warning  'ArrowRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\search-bar.tsx
+  18:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\CMC\college-platform\components\search-bar.tsx:18:9
+  16 |
+  17 |     useEffect(() => {
+> 18 |         setQuery(searchParams.get('q') || '')
+     |         ^^^^^^^^ Avoid calling setState() directly within an effect
+  19 |     }, [searchParams])
+  20 |
+  21 |     const handleSearch = (e: React.FormEvent) => {  react-hooks/set-state-in-effect
+
+D:\CMC\college-platform\lib\supabase\middleware.ts
+  18:48  warning  'options' is defined but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 122 problems (26 errors, 96 warnings)
+

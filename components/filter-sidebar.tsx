@@ -1,39 +1,16 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { motion } from 'framer-motion'
 import { 
-    Stethoscope, 
-    GraduationCap, 
     FilterX, 
-    Activity, 
-    HeartPulse, 
-    Dna, 
-    Microscope, 
-    Pill, 
-    FlaskConical, 
-    Syringe, 
-    Baby, 
-    Brain, 
-    Radiation,
     FileText,
     Image as ImageIcon,
-    Video,
-    Music,
-    Search,
-    ChevronDown,
     LayoutGrid,
-    BookOpen,
-    Tags,
     Sparkles,
     Fingerprint,
-    SlidersHorizontal
 } from 'lucide-react'
-import { AnatomicalHeart } from '@/components/icons/anatomical-heart'
 
 interface FilterSidebarProps {
     dynamicDepartments?: { name: string; icon: React.ReactNode }[]

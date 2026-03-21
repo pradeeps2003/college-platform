@@ -6,16 +6,13 @@ import { supabase } from '@/lib/supabase'
 import { Resource } from '@/components/resource-card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Download, User, Calendar, AlertTriangle, Stethoscope, Activity, FileCheck, Info, ChevronLeft, ShieldAlert } from 'lucide-react'
-import { AnatomicalHeart } from '@/components/icons/anatomical-heart'
+import { User, Activity, FileCheck, Info, ChevronLeft, ShieldAlert, AlertTriangle, Stethoscope } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { useAuth } from '@/components/auth-provider'
-import { toast } from 'sonner'
-import { FadeIn, ScaleIn, SlideIn } from '@/components/motion-wrapper'
+import { FadeIn, SlideIn } from '@/components/motion-wrapper'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { cn } from '@/lib/utils'
-import { FileText, Archive, TrendingUp, Clock, CheckCircle2 } from 'lucide-react'
+import { FileText, Archive, TrendingUp } from 'lucide-react'
 
 export default function ResourceDetailPage() {
     const { id } = useParams()
@@ -23,7 +20,6 @@ export default function ResourceDetailPage() {
     const { user } = useAuth()
     const [resource, setResource] = useState<Resource | null>(null)
     const [loading, setLoading] = useState(true)
-    const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
         async function loadResource() {
@@ -31,12 +27,11 @@ export default function ResourceDetailPage() {
 
             // Check if user is admin
             if (user) {
-                const { data: profile } = await supabase
+                await supabase
                     .from('profiles')
                     .select('role')
                     .eq('id', user.id)
                     .single()
-                setIsAdmin(profile?.role === 'admin')
             }
 
             const { data, error } = await supabase

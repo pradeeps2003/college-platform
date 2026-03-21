@@ -12,13 +12,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { toast } from 'sonner'
-import { cn, compressImage } from '@/lib/utils'
+import { compressImage } from '@/lib/utils'
 import {
     Camera, User as UserIcon, Mail, GraduationCap,
     ShieldCheck, Save, Loader2, ArrowLeft, Image as ImageIcon
 } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { FadeIn, SlideIn, ScaleIn } from '@/components/motion-wrapper'
+import { motion } from 'framer-motion'
+import { FadeIn, SlideIn } from '@/components/motion-wrapper'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 
 export default function SettingsPage() {
@@ -61,8 +61,8 @@ export default function SettingsPage() {
                     avatar_url: data.avatar_url || '',
                     role: data.role || ''
                 })
-            } catch (err: any) {
-                console.error("Error loading profile:", err.message)
+            } catch (err) {
+                console.error("Error loading profile:", err instanceof Error ? err.message : String(err))
                 toast.error("Failed to load profile data")
             } finally {
                 setLoading(false)
@@ -146,9 +146,9 @@ export default function SettingsPage() {
             }
 
             toast.success("Profile photo updated")
-        } catch (err: any) {
+        } catch (err) {
             console.error("Detailed Upload Error:", err)
-            toast.error(err.message || "Failed to upload photo", {
+            toast.error(err instanceof Error ? err.message : "Failed to upload photo", {
                 description: "Ensure the 'resources' bucket exists and has correct permissions."
             })
         } finally {
@@ -182,9 +182,10 @@ export default function SettingsPage() {
             // Redirect to dashboard
             const redirectPath = profile.role === 'admin' ? '/admin' : '/dashboard'
             router.push(redirectPath)
-        } catch (err: any) {
-            console.error("Update error:", err.message)
-            toast.error("Update failed", { description: err.message })
+        } catch (err) {
+            const message = err instanceof Error ? err.message : String(err)
+            console.error("Update error:", message)
+            toast.error("Update failed", { description: message })
         } finally {
             setSaving(false)
         }
@@ -303,7 +304,7 @@ export default function SettingsPage() {
                                                         if (error) throw error
                                                         setProfile(prev => ({ ...prev, avatar_url: '' }))
                                                         toast.success("Profile photo removed")
-                                                    } catch (err: any) {
+                                                    } catch (err) {
                                                         toast.error("Failed to remove photo")
                                                     }
                                                 }}

@@ -16,7 +16,6 @@ import {
   Brain,
   Syringe,
   Pill,
-  ShieldCheck,
   HeartPulse,
   FlaskConical,
   Dna,
@@ -30,7 +29,7 @@ import { DynamicHeroTitle } from '@/components/dynamic-title'
 
 // Helper to map icon names to components
 const getIconComponent = (iconName: string, className: string = "h-5 w-5 text-primary") => {
-  const IconMap: Record<string, any> = {
+  const IconMap: Record<string, React.ElementType> = {
     Stethoscope, Activity, BookOpen, GraduationCap, Microscope, Baby, Brain, Syringe, Pill, HeartPulse, FlaskConical, Dna, Radiation, AnatomicalHeart
   }
   const Icon = IconMap[iconName] || Stethoscope
@@ -57,7 +56,7 @@ async function getLanderData() {
 
   // Sum downloads
   const { data: downloadData } = await supabase.from('resources').select('download_count').eq('status', 'approved')
-  const totalDownloads = (downloadData || []).reduce((sum: number, item: any) => sum + (item.download_count || 0), 0)
+  const totalDownloads = (downloadData || []).reduce((sum: number, item) => sum + ((item as { download_count: number | null }).download_count || 0), 0)
 
   // Get counts per specialty
   const specialtyCounts: Record<string, number> = {}

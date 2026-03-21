@@ -37,8 +37,8 @@ function LoginContent() {
 
             router.push(redirectTo)
             router.refresh()
-        } catch (error: any) {
-            setError(error.message)
+        } catch (error) {
+            setError(error instanceof Error ? error.message : String(error))
         } finally {
             setLoading(false)
         }
@@ -121,7 +121,7 @@ function LoginContent() {
                         </CardContent>
                         <CardFooter className="bg-muted/30 py-3 flex justify-center border-t border-border/50">
                             <p className="text-[10px] text-muted-foreground font-medium">
-                                Don't have an account?{' '}
+                                Don&apos;t have an account?{' '}
                                 <Link href={`/auth/signup${redirectTo !== '/dashboard' ? `?next=${encodeURIComponent(redirectTo)}` : ''}`} className="text-primary font-bold hover:underline underline-offset-4">
                                     Sign Up
                                 </Link>

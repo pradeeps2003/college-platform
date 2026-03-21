@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AlertCircle, ShieldCheck, UserCircle2, GraduationCap, Building2, Eye, EyeOff } from 'lucide-react'
+import { AlertCircle, Eye, EyeOff } from 'lucide-react'
 import { FadeIn, SlideIn, ScaleIn } from '@/components/motion-wrapper'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 
@@ -19,7 +19,6 @@ export default function SignupPage() {
     const [showPassword, setShowPassword] = useState(false)
     const [fullName, setFullName] = useState('')
     const [year, setYear] = useState('')
-    const [role] = useState<'student'>('student')
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const router = useRouter()
@@ -55,8 +54,8 @@ export default function SignupPage() {
 
             router.push('/dashboard')
             router.refresh()
-        } catch (error: any) {
-            setError(error.message)
+        } catch (error) {
+            setError(error instanceof Error ? error.message : String(error))
         } finally {
             setLoading(false)
         }

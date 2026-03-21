@@ -16,7 +16,7 @@ export default function FavoritesPage() {
             if (!user) return
 
             // Join favorites with resources
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('favorites')
                 .select(`
           resource_id,
@@ -29,7 +29,7 @@ export default function FavoritesPage() {
 
             if (data) {
                 // Flatten structure
-                const resources = data.map((item: any) => item.resources) as unknown as Resource[]
+                const resources = data.map((item) => (item as unknown as { resources: Resource }).resources)
                 setFavorites(resources)
             }
             setLoading(false)

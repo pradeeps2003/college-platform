@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { SlideIn } from '@/components/motion-wrapper'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Specialty {

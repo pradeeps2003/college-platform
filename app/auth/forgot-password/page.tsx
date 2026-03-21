@@ -31,8 +31,8 @@ export default function ForgotPasswordPage() {
             if (resetError) throw resetError
 
             setSuccess(true)
-        } catch (error: any) {
-            setError(error.message)
+        } catch (error) {
+            setError(error instanceof Error ? error.message : String(error))
         } finally {
             setLoading(false)
         }

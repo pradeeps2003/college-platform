@@ -1,0 +1,37 @@
+﻿
+> college-platform@0.1.0 lint
+> eslint
+
+
+D:\CMC\college-platform\app\admin\page.tsx
+  39:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\favorites\page.tsx
+  32:63  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\page.tsx
+  32:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  59:93  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\CMC\college-platform\app\settings\page.tsx
+  307:62  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\app\upload\page.tsx
+   12:29  warning  'CardDescription' is defined but never used      @typescript-eslint/no-unused-vars
+   12:46  warning  'CardHeader' is defined but never used           @typescript-eslint/no-unused-vars
+   12:58  warning  'CardTitle' is defined but never used            @typescript-eslint/no-unused-vars
+   17:18  warning  'SlideIn' is defined but never used              @typescript-eslint/no-unused-vars
+   18:8   warning  'Link' is defined but never used                 @typescript-eslint/no-unused-vars
+  111:27  warning  'uploadData' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\browse-search.tsx
+  4:20  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\navbar.tsx
+  19:10  warning  'usePathname' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\CMC\college-platform\components\search-bar.tsx
+  7:20  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 14 problems (4 errors, 10 warnings)
+

@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertCircle, CheckCircle2, KeyRound, ShieldCheck } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AlertCircle, CheckCircle2, KeyRound } from 'lucide-react'
 import { FadeIn, ScaleIn, SlideIn } from '@/components/motion-wrapper'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 
@@ -41,8 +41,8 @@ export default function ResetPasswordPage() {
             setTimeout(() => {
                 router.push('/auth/login')
             }, 3000)
-        } catch (error: any) {
-            setError(error.message)
+        } catch (error) {
+            setError(error instanceof Error ? error.message : String(error))
         } finally {
             setLoading(false)
         }

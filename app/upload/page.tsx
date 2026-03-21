@@ -9,13 +9,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
-import { X, Loader2, UploadCloud, FileText, Paperclip, Activity, Stethoscope, ChevronLeft, ShieldCheck, GraduationCap, Archive } from 'lucide-react'
-import { FadeIn, SlideIn, ScaleIn } from '@/components/motion-wrapper'
-import Link from 'next/link'
+import { X, Loader2, UploadCloud, FileText, Paperclip, ShieldCheck, GraduationCap, Archive } from 'lucide-react'
+import { FadeIn, ScaleIn } from '@/components/motion-wrapper'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { compressImage } from '@/lib/utils'
 
@@ -108,7 +107,7 @@ export default function UploadPage() {
             const fileExt = fileToUpload.name.split('.').pop()
             const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
 
-            const { data: uploadData, error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase.storage
                 .from('resources')
                 .upload(fileName, fileToUpload)
 
@@ -145,10 +144,10 @@ export default function UploadPage() {
             })
             router.push('/dashboard')
             router.refresh()
-        } catch (error: any) {
+        } catch (error) {
             console.error('Upload failed:', error)
             toast.error('Upload Failed', {
-                description: error.message || 'An error occurred during submission.'
+                description: error instanceof Error ? error.message : 'An error occurred during submission.'
             })
         } finally {
             setLoading(false)

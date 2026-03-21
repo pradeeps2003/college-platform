@@ -6,19 +6,11 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/components/auth-provider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from '@/components/ui/table'
 import {
     Dialog,
     DialogContent,
@@ -29,8 +21,8 @@ import {
 } from "@/components/ui/dialog"
 import {
     Check, X, FileText, Users, AlertCircle, ExternalLink,
-    Stethoscope, ShieldCheck, Activity, Library, Trash2,
-    Clock, Eye, Search, Filter, MoreVertical, UserPlus,
+    Stethoscope, ShieldCheck, Activity, Trash2,
+    Clock, Eye, Search, UserPlus,
     ShieldAlert, Mail, GraduationCap, LayoutGrid, Plus, Pencil,
     Dna, Microscope, Baby, Brain, Radiation, Pill, FlaskConical,
     HeartPulse, Syringe, Archive, Sparkles, ChevronRight
@@ -38,13 +30,13 @@ import {
 import { formatDistanceToNow } from 'date-fns'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FadeIn, SlideIn, ScaleIn } from '@/components/motion-wrapper'
+import { FadeIn, ScaleIn } from '@/components/motion-wrapper'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 
 import { Resource } from '@/components/resource-card'
 import { cn } from '@/lib/utils'
 
-const SPECIALTY_ICONS: Record<string, any> = {
+const SPECIALTY_ICONS: Record<string, React.ElementType> = {
     Stethoscope, GraduationCap, HeartPulse, Dna, Microscope,
     Pill, FlaskConical, Syringe, Baby, Brain, Radiation, Activity, Archive
 }
@@ -163,9 +155,9 @@ export default function AdminDashboard() {
                 })
 
 
-            } catch (err: any) {
-
-                console.error("Data load error:", err.message)
+            } catch (err) {
+                const message = err instanceof Error ? err.message : String(err)
+                console.error("Data load error:", message)
                 toast.error("Network issue. Some stats may be missing.")
             } finally {
                 setLoading(false)
@@ -246,7 +238,7 @@ export default function AdminDashboard() {
         }
     }
 
-    const openEditModal = (spec: any) => {
+    const openEditModal = (spec: { id: string; name: string; description: string; icon_name: string }) => {
         setIsEditingSpecialty(true)
         setEditingSpecialtyId(spec.id)
         setNewSpecialtyName(spec.name)
@@ -340,7 +332,7 @@ export default function AdminDashboard() {
             }
             
             toast.success("Resource permanently deleted")
-        } catch (err: any) {
+        } catch (err) {
             console.error("Delete error:", err)
             toast.error("Failed to delete resource")
         }
@@ -736,7 +728,7 @@ export default function AdminDashboard() {
                                         </button>
                                     )}
 
-                                    {filteredSpecialties.map((spec: any) => {
+                                    {filteredSpecialties.map((spec) => {
                                         const IconComponent = SPECIALTY_ICONS[spec.icon_name] || LayoutGrid
 
                                         const isActive = spec.is_active !== false
@@ -1100,7 +1092,7 @@ export default function AdminDashboard() {
 
                         <div className="space-y-4">
                             <p className="text-sm text-muted-foreground leading-relaxed">
-                                You are about to approve <span className="font-bold text-foreground">"{approvingResource?.title}"</span>. It will be immediately available to all students.
+                                You are about to approve <span className="font-bold text-foreground">&quot;{approvingResource?.title}&quot;</span>. It will be immediately available to all students.
                             </p>
                         </div>
 
@@ -1147,7 +1139,7 @@ export default function AdminDashboard() {
 
                         <div className="space-y-4">
                             <p className="text-sm text-muted-foreground leading-relaxed">
-                                You are about to permanently delete <span className="font-bold text-foreground">"{deletingSpec?.name}"</span>. This action cannot be undone.
+                                You are about to permanently delete <span className="font-bold text-foreground">&quot;{deletingSpec?.name}&quot;</span>. This action cannot be undone.
                             </p>
                         </div>
 

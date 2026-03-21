@@ -1,17 +1,13 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Search, X } from 'lucide-react'
 
 export function BrowseSearch() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [query, setQuery] = useState(searchParams.get('q') || '')
-
-    useEffect(() => {
-        setQuery(searchParams.get('q') || '')
-    }, [searchParams])
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -32,7 +28,7 @@ export function BrowseSearch() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="relative flex items-center w-full max-w-xs">
+        <form key={searchParams.get('q') || 'browse-search'} onSubmit={handleSubmit} className="relative flex items-center w-full max-w-xs">
             <Search className="absolute left-3 h-3.5 w-3.5 text-muted-foreground/50 pointer-events-none" />
             <input
                 type="text"

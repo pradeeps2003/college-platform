@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Search, Sparkles } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export function SearchBar({ className }: { className?: string }) {
@@ -13,10 +13,6 @@ export function SearchBar({ className }: { className?: string }) {
 
     const [query, setQuery] = useState(searchParams.get('q') || '')
     const [isFocused, setIsFocused] = useState(false)
-
-    useEffect(() => {
-        setQuery(searchParams.get('q') || '')
-    }, [searchParams])
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
@@ -34,6 +30,7 @@ export function SearchBar({ className }: { className?: string }) {
     return (
         <motion.form
             onSubmit={handleSearch}
+            key={searchParams.get('q') || 'search'}
             className={`flex w-full items-center p-1.5 rounded-[1.8rem] bg-white/80 dark:bg-card/40 backdrop-blur-xl border transition-all duration-500 relative ${isFocused ? 'border-primary shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]' : 'border-border/40 shadow-xl shadow-black/5'} ${className}`}
         >
             {/* Intelligent Glow Background */}

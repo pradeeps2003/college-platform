@@ -14,13 +14,11 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Stethoscope, Activity, LogOut, Upload, User as UserIcon, LayoutDashboard, Globe, ShieldCheck, Settings as SettingsIcon } from 'lucide-react'
+import { Stethoscope, LogOut, Upload, LayoutDashboard, ShieldCheck, Settings as SettingsIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
 
 export function Navbar() {
     const { user, signOut } = useAuth()
-    const pathname = usePathname()
     const [profile, setProfile] = useState<{ role: string | null; full_name: string | null; avatar_url: string | null }>({
         role: null,
         full_name: null,
@@ -40,7 +38,10 @@ export function Navbar() {
                     avatar_url: data?.avatar_url || null
                 }))
         } else {
-            setProfile({ role: null, full_name: null, avatar_url: null })
+            // Use a small delay to avoid synchronous state update in effect
+            Promise.resolve().then(() => {
+                setProfile({ role: null, full_name: null, avatar_url: null })
+            })
         }
     }, [user])
 
