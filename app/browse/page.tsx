@@ -4,7 +4,7 @@ import { FilterSidebar } from '@/components/filter-sidebar'
 import { ResourceCard, Resource } from '@/components/resource-card'
 
 import { Button } from '@/components/ui/button'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 import { FadeIn, SlideIn } from '@/components/motion-wrapper'
 import {
     Stethoscope,
@@ -24,6 +24,8 @@ import { AnatomicalHeart } from '@/components/icons/anatomical-heart'
 import { BrowseToolbar } from '@/components/browse-toolbar'
 import { ActiveFilters } from '@/components/active-filters'
 import { Breadcrumbs } from '@/components/breadcrumbs'
+
+export const dynamic = 'force-dynamic';
 
 const iconMap: Record<string, React.ReactNode> = {
     'anatomy': <GraduationCap className="h-3.5 w-3.5" />,
@@ -47,7 +49,7 @@ function getCategoryIcon(name: string) {
     return <Stethoscope className="h-3.5 w-3.5" />
 }
 
-async function getResources(searchParams: { [key: string]: string | string[] | undefined }) {
+async function getResources(supabase: any, searchParams: { [key: string]: string | string[] | undefined }) {
     const dept = searchParams.dept as string
     const sem = searchParams.sem as string
     const q = searchParams.q as string
@@ -85,7 +87,7 @@ async function getResources(searchParams: { [key: string]: string | string[] | u
     return data as unknown as Resource[]
 }
 
-async function getFilterOptions() {
+async function getFilterOptions(supabase: any) {
     const { data: specTableData } = await supabase
         .from('specialties')
         .select('name, icon_name')
@@ -118,8 +120,9 @@ export default async function BrowsePage({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
     const searchParams = await searchParamsPromise
-    const resources = await getResources(searchParams)
-    const { departments } = await getFilterOptions()
+    const supabase = await createClient()
+    const resources = await getResources(supabase, searchParams)
+    const { departments } = await getFilterOptions(supabase)
 
     return (
         <div className="min-h-screen bg-background transition-colors duration-500">

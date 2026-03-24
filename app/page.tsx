@@ -17,8 +17,10 @@ import {
   Radiation
 } from 'lucide-react'
 import { AnatomicalHeart } from '@/components/icons/anatomical-heart'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 import { HomeClient } from '@/components/home-client'
+
+export const dynamic = 'force-dynamic';
 
 // Helper to map icon names to components
 const getIconComponent = (iconName: string, className: string = "h-5 w-5 text-primary") => {
@@ -30,6 +32,7 @@ const getIconComponent = (iconName: string, className: string = "h-5 w-5 text-pr
 }
 
 async function getLanderData() {
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (user) {
