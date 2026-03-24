@@ -514,18 +514,20 @@ export default function AdminDashboard() {
                 <div className="space-y-8">
                     <Tabs defaultValue="approvals" className="w-full">
                         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10 mb-16 relative">
-                            <div className="flex flex-col gap-8">
-                                <TabsList className="bg-slate-100/50 dark:bg-white/5 backdrop-blur-md h-auto p-1.5 gap-2 rounded-[2rem] border border-border/40 inline-flex w-fit">
-                                    <TabsTrigger value="approvals" className="px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none">
-                                        Review Files
-                                    </TabsTrigger>
-                                    <TabsTrigger value="specialties" className="px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none">
-                                        Categories
-                                    </TabsTrigger>
-                                    <TabsTrigger value="users" className="px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none">
-                                        User List
-                                    </TabsTrigger>
-                                </TabsList>
+                            <div className="flex flex-col gap-8 w-full max-w-[100vw] sm:max-w-full">
+                                <div className="w-full overflow-x-auto pb-4 -mb-4 snap-x scrollbar-hide">
+                                    <TabsList className="bg-slate-100/50 dark:bg-white/5 backdrop-blur-md h-auto p-1.5 gap-2 rounded-[2rem] border border-border/40 flex w-max min-w-min">
+                                        <TabsTrigger value="approvals" className="px-6 md:px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none shrink-0 snap-start">
+                                            Review Files
+                                        </TabsTrigger>
+                                        <TabsTrigger value="specialties" className="px-6 md:px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none shrink-0 snap-start">
+                                            Categories
+                                        </TabsTrigger>
+                                        <TabsTrigger value="users" className="px-6 md:px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none shrink-0 snap-start">
+                                            User List
+                                        </TabsTrigger>
+                                    </TabsList>
+                                </div>
                             </div>
 
                             <div className="flex items-center gap-6 max-w-md w-full">

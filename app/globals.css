@@ -50,6 +50,7 @@
   --radius: 1rem;
   --background: oklch(0.98 0.01 240);
   --foreground: oklch(0.12 0.03 240);
+  scroll-behavior: smooth;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.12 0.03 240);
   --popover: oklch(1 0 0);
@@ -122,6 +123,14 @@
     background: var(--primary);
     opacity: 0.5;
   }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 @layer base {
@@ -160,4 +169,20 @@
 
 .animate-pulse-slow {
   animation: pulse-slow 5s ease-in-out infinite;
+}
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 0.75rem));
+  }
+}
+
+.animate-scroll {
+  animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+}
+
+.scroller {
+  mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
 }

@@ -275,10 +275,10 @@ export default function MyUploadsPage() {
 
                 {/* Status Tracking Dialog */}
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogContent showCloseButton={false} className="max-w-md rounded-[2.5rem] border-border/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl p-0 overflow-hidden shadow-2xl">
+                    <DialogContent showCloseButton={false} className="max-w-md rounded-[2rem] sm:rounded-[2.5rem] border-border/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl p-0 overflow-hidden shadow-2xl">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
                         
-                        <div className="p-10 relative z-10 space-y-8">
+                        <div className="p-6 sm:p-8 md:p-10 relative z-10 space-y-6 sm:space-y-8">
                             <DialogHeader>
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20">

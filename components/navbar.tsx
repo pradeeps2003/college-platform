@@ -46,17 +46,19 @@ export function Navbar() {
     }, [user])
 
     return (
-        <nav className="border-b bg-background/80 backdrop-blur-md sticky top-0 z-50 transition-all duration-300">
-            <div className="container flex h-14 items-center justify-between relative">
-                <div className="flex items-center gap-2 pl-8">
-                    <Link href="/" className="flex items-center gap-2 font-black text-2xl tracking-tighter text-foreground group">
-                        <Stethoscope className="h-6 w-6 text-primary group-hover:rotate-12 transition-transform duration-500" />
-                        <span className="italic">Clinical <span className="text-primary not-italic">Repository.</span></span>
+        <nav className="border-b bg-background/80 backdrop-blur-2xl sticky top-0 z-50 transition-all duration-300 shadow-sm">
+            <div className="container flex h-16 items-center justify-between relative px-4 md:px-8">
+                <div className="flex items-center gap-2">
+                    <Link href={profile.role === 'admin' ? '/admin' : user ? '/dashboard' : '/'} className="flex items-center gap-2.5 font-black text-xl md:text-2xl tracking-tighter text-foreground group">
+                        <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:bg-primary transition-all duration-500">
+                            <Stethoscope className="h-4 w-4 md:h-5 md:w-5 text-primary group-hover:text-white group-hover:rotate-12 transition-transform duration-500" />
+                        </div>
+                        <span className="italic hidden md:inline">Clinical <span className="text-primary not-italic">Repository.</span></span>
                     </Link>
                 </div>
 
-                <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent overflow-hidden">
-                    <div className="w-1/2 h-full bg-primary/60 animate-pulse" />
+                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent overflow-hidden">
+                    <div className="w-1/2 h-full bg-primary/40 animate-[pulse_3s_ease-in-out_infinite]" />
                 </div>
 
                 <div className="flex items-center gap-2 md:gap-4">

@@ -174,3 +174,33 @@ CREATE POLICY "Admins can manage settings" ON public.system_settings
 
 CREATE POLICY "Public settings viewable by admins" ON public.system_settings FOR SELECT 
   USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- Feedback table for user feedback submissions
+CREATE TABLE IF NOT EXISTS public.feedback (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT DEFAULT 'Anonymous',
+  email TEXT,
+  category TEXT DEFAULT 'general' CHECK (category IN ('general', 'bug', 'feature', 'content', 'ui')),
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  message TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for feedback
+CREATE INDEX idx_feedback_category ON feedback(category);
+CREATE INDEX idx_feedback_created_at ON feedback(created_at DESC);
+
+-- Enable RLS on feedback
+ALTER TABLE public.feedback ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can submit feedback (including anonymous/unauthenticated users)
+CREATE POLICY "Anyone can insert feedback" ON public.feedback FOR INSERT
+  WITH CHECK (true);
+
+-- Only admins can view feedback
+CREATE POLICY "Admins can view feedback" ON public.feedback FOR SELECT
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- Only admins can delete feedback
+CREATE POLICY "Admins can delete feedback" ON public.feedback FOR DELETE
+  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));

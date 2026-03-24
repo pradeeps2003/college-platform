@@ -264,7 +264,7 @@ export default function UploadPage() {
                                             />
                                         </div>
 
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <div className="space-y-1.5 group">
                                                 <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60 pl-1">Department</Label>
                                                 <Select onValueChange={setDepartment} required>
@@ -301,7 +301,7 @@ export default function UploadPage() {
                                                 </Select>
                                             </div>
 
-                                            <div className="space-y-1.5 group col-span-2 md:col-span-1">
+                                            <div className="space-y-1.5 group">
                                                 <Label htmlFor="topic" className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60 pl-1">Topic</Label>
                                                 <Input
                                                     id="topic"
