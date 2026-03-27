@@ -24,6 +24,8 @@ import { DomainGrid } from '@/components/domain-grid'
 import { DynamicHeroTitle } from '@/components/dynamic-title'
 import { HeroSpotlight } from '@/components/hero-spotlight'
 
+import { User } from '@supabase/supabase-js'
+
 interface Specialty {
     name: string
     icon: React.ReactNode
@@ -39,9 +41,11 @@ interface HomeClientProps {
     }[]
     mappedSpecialties: Specialty[]
     specialtyCounts: Record<string, number>
+    user: User | null
+    userRole: string | null
 }
 
-export function HomeClient({ stats, mappedSpecialties, specialtyCounts }: HomeClientProps) {
+export function HomeClient({ stats, mappedSpecialties, specialtyCounts, user, userRole }: HomeClientProps) {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
@@ -135,15 +139,27 @@ export function HomeClient({ stats, mappedSpecialties, specialtyCounts }: HomeCl
                 </Button>
               </Link>
 
-              <Link href="/auth/signup" className="block inline-block">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="rounded-2xl px-10 h-14 border-border/60 hover:border-primary/50 dark:border-white/10 dark:hover:border-primary/50 bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground dark:text-white font-bold text-xs transition-all active:scale-95 uppercase tracking-widest hover:bg-primary/5 dark:hover:bg-primary/10 shadow-lg relative z-10"
-                >
-                  Join Community
-                </Button>
-              </Link>
+              {user ? (
+                <Link href={userRole === 'admin' ? '/admin' : '/dashboard'} className="block inline-block">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-2xl px-10 h-14 border-border/60 hover:border-primary/50 dark:border-white/10 dark:hover:border-primary/50 bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground dark:text-white font-bold text-xs transition-all active:scale-95 uppercase tracking-widest hover:bg-primary/5 dark:hover:bg-primary/10 shadow-lg relative z-10"
+                  >
+                    Go to Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/auth/signup" className="block inline-block">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-2xl px-10 h-14 border-border/60 hover:border-primary/50 dark:border-white/10 dark:hover:border-primary/50 bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground dark:text-white font-bold text-xs transition-all active:scale-95 uppercase tracking-widest hover:bg-primary/5 dark:hover:bg-primary/10 shadow-lg relative z-10"
+                  >
+                    Join Community
+                  </Button>
+                </Link>
+              )}
             </FadeIn>
           </div>
         </div>

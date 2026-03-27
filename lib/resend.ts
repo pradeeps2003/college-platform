@@ -59,3 +59,54 @@ export const sendWelcomeEmail = async (email: string, fullName: string) => {
     return { success: false, error: err };
   }
 };
+export const sendOtpEmail = async (email: string, otpCode: string) => {
+  try {
+     if (!resend) {
+        console.warn('RESEND_API_KEY is missing. Falling back to mock email for:', email);
+        return { success: true, mocked: true };
+     }
+
+     const { data, error } = await resend.emails.send({
+         from: 'Clinical Repository <onboarding@resend.dev>',
+         to: [email],
+         subject: 'Your Password Reset Code',
+         html: `
+           <div style="font-family: 'Inter', system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #1a1a1a; background-color: #f9fafb; border-radius: 16px;">
+             <div style="text-align: center; margin-bottom: 32px;">
+               <h1 style="font-size: 32px; font-weight: 800; color: #000; margin: 0; letter-spacing: -0.025em;">Clinical Repository</h1>
+               <p style="color: #6b7280; margin-top: 8px;">Security Verification</p>
+             </div>
+             
+             <div style="background-color: #ffffff; padding: 32px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+               <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; text-align: center;">Reset Your Password</h2>
+               <p style="font-size: 14px; line-height: 1.6; color: #4b5563; margin-bottom: 24px; text-align: center;">
+                 Use the code below to verify your identity and continue with the password reset process. This code will expire in 10 minutes.
+               </p>
+               
+               <div style="background-color: #f3f4f6; padding: 24px; border-radius: 12px; margin: 24px 0; text-align: center;">
+                 <span style="font-family: monospace; font-size: 36px; font-weight: 800; letter-spacing: 0.25em; color: #000;">${otpCode}</span>
+               </div>
+               
+               <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 32px;">
+                 If you didn't request a password reset, you can safely ignore this email.
+               </p>
+             </div>
+             
+             <div style="text-align: center; margin-top: 32px; font-size: 12px; color: #9ca3af;">
+               <p>&copy; ${new Date().getFullYear()} Clinical Repository. All rights reserved.</p>
+             </div>
+           </div>
+         `,
+     });
+
+     if (error) {
+       console.error('Resend error:', error);
+       return { success: false, error };
+     }
+
+     return { success: true, data };
+  } catch (err) {
+    console.error('Unexpected error in sendOtpEmail:', err);
+    return { success: false, error: err };
+  }
+};

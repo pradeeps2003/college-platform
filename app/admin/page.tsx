@@ -32,6 +32,7 @@ import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FadeIn, ScaleIn } from '@/components/motion-wrapper'
 import { Breadcrumbs } from '@/components/breadcrumbs'
+import { DashboardSearch } from '@/components/dashboard-search'
 
 import { Resource } from '@/components/resource-card'
 import { cn } from '@/lib/utils'
@@ -66,7 +67,6 @@ export default function AdminDashboard() {
 
     // UI State
     const [searchQuery, setSearchQuery] = useState('')
-    const [isSearchFocused, setIsSearchFocused] = useState(false)
 
     // User Pagination State
     const [userPage, setUserPage] = useState(1)
@@ -92,6 +92,15 @@ export default function AdminDashboard() {
     // Approval Confirmation State
     const [isApproveConfirmOpen, setIsApproveConfirmOpen] = useState(false)
     const [approvingResource, setApprovingResource] = useState<{ id: string, title: string } | null>(null)
+
+    // User Detail Modal State
+    const [isUserDetailOpen, setIsUserDetailOpen] = useState(false)
+    const [selectedUploader, setSelectedUploader] = useState<Profile | null>(null)
+
+    const handleUploaderClick = (uploader: Profile) => {
+        setSelectedUploader(uploader)
+        setIsUserDetailOpen(true)
+    }
 
 
 
@@ -119,7 +128,7 @@ export default function AdminDashboard() {
                 // Load Pending Resources
                 const { data: pending, error: pendingError } = await supabase
                     .from('resources')
-                    .select('*, profiles!resources_uploaded_by_fkey(full_name)')
+                    .select('*, profiles:profiles!resources_uploaded_by_fkey(*, resources:resources!resources_uploaded_by_fkey(count))')
                     .eq('status', 'pending')
                     .order('created_at', { ascending: false })
 
@@ -462,13 +471,13 @@ export default function AdminDashboard() {
                                 <AlertCircle className="h-32 w-32 text-orange-500" />
                             </div>
                             <CardHeader className="pb-4">
-                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Action Required</CardTitle>
+                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Pending Approvals</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="text-7xl font-black text-slate-900 dark:text-white tabular-nums tracking-tighter">{stats.pending}</div>
                                 <div className="flex items-center gap-3 bg-orange-500/10 border border-orange-500/20 px-5 py-2.5 rounded-2xl w-fit">
                                     <Clock className="h-4 w-4 text-orange-500" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-orange-600">Waiting for Review</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-orange-600">Waiting Review</span>
                                 </div>
                             </CardContent>
                         </Card>
@@ -480,7 +489,7 @@ export default function AdminDashboard() {
                                 <Archive className="h-32 w-32 text-primary" />
                             </div>
                             <CardHeader className="pb-4">
-                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Asset Inventory</CardTitle>
+                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Total Documents</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="text-7xl font-black text-slate-900 dark:text-white tabular-nums tracking-tighter">{stats.totalResources}</div>
@@ -498,13 +507,13 @@ export default function AdminDashboard() {
                                 <Users className="h-32 w-32 text-indigo-500" />
                             </div>
                             <CardHeader className="pb-4">
-                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">User Directory</CardTitle>
+                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Total Members</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="text-7xl font-black text-slate-900 dark:text-white tabular-nums tracking-tighter">{stats.totalUsers}</div>
                                 <div className="flex items-center gap-3 bg-indigo-500/10 border border-indigo-500/20 px-5 py-2.5 rounded-2xl w-fit">
                                     <UserPlus className="h-4 w-4 text-indigo-500" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Total Members</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Platform Users</span>
                                 </div>
                             </CardContent>
                         </Card>
@@ -518,87 +527,25 @@ export default function AdminDashboard() {
                                 <div className="w-full overflow-x-auto pb-4 -mb-4 snap-x scrollbar-hide">
                                     <TabsList className="bg-slate-100/50 dark:bg-white/5 backdrop-blur-md h-auto p-1.5 gap-2 rounded-[2rem] border border-border/40 flex w-max min-w-min">
                                         <TabsTrigger value="approvals" className="px-6 md:px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none shrink-0 snap-start">
-                                            Review Files
+                                            Document Reviews
                                         </TabsTrigger>
                                         <TabsTrigger value="specialties" className="px-6 md:px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none shrink-0 snap-start">
-                                            Categories
+                                            Subjects
                                         </TabsTrigger>
                                         <TabsTrigger value="users" className="px-6 md:px-10 py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] transition-all data-[state=active]:bg-slate-900 data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-slate-900 border-none shrink-0 snap-start">
-                                            User List
+                                            Members
                                         </TabsTrigger>
                                     </TabsList>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-6 max-w-md w-full">
-                                <motion.form
-                                    onSubmit={(e) => e.preventDefault()}
-                                    className={cn(
-                                        "flex w-full items-center p-1.5 rounded-[1.8rem] bg-white/80 dark:bg-card/40 backdrop-blur-xl border transition-all duration-500 relative",
-                                        isSearchFocused ? 'border-primary shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]' : 'border-border/40 shadow-xl shadow-black/5'
-                                    )}
-                                >
-                                    {/* Intelligent Glow Background */}
-                                    <AnimatePresence>
-                                        {isSearchFocused && (
-                                            <motion.div
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                exit={{ opacity: 0 }}
-                                                className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 pointer-events-none rounded-[1.8rem]"
-                                            />
-                                        )}
-                                    </AnimatePresence>
-
-                                    <div className="relative flex-1 flex items-center">
-                                        <div className={cn(
-                                            "pl-5 transition-colors duration-500",
-                                            isSearchFocused ? 'text-primary' : 'text-muted-foreground/30'
-                                        )}>
-                                            <Search className="h-4 w-4" />
-                                        </div>
-
-                                        <Input
-                                            placeholder="Search database ..."
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                            onFocus={() => setIsSearchFocused(true)}
-                                            onBlur={() => setIsSearchFocused(false)}
-                                            className="flex-1 h-11 border-none bg-transparent focus-visible:ring-0 text-foreground text-[10px] font-bold tracking-[0.1em] placeholder:text-muted-foreground/30 pl-3"
-                                        />
-
-                                        {searchQuery && (
-                                            <button
-                                                type="button"
-                                                onClick={() => setSearchQuery('')}
-                                                className="mr-3 text-muted-foreground/30 hover:text-primary transition-colors hover:scale-110 active:scale-95"
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </button>
-                                        )}
-
-                                        {/* Keyboard Shortcut Hint */}
-                                        <div className="hidden md:flex items-center gap-1 mr-3 px-2 py-1 rounded-md bg-secondary/50 border border-border/40 text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest pointer-events-none">
-                                            <span className="text-[10px]">⌘</span> K
-                                        </div>
-                                    </div>
-
-                                    <Button
-                                        type="submit"
-                                        className="rounded-full px-6 h-11 bg-primary hover:bg-primary/90 text-white font-black text-[9px] uppercase tracking-[0.15em] shadow-lg shadow-primary/10 transition-all active:scale-95 group relative overflow-hidden border-none"
-                                    >
-                                        <span className="relative z-10 flex items-center gap-2">
-                                            Search
-                                            <Sparkles className="h-3.5 w-3.5 group-hover:rotate-12 transition-transform" />
-                                        </span>
-                                        <motion.div
-                                            className="absolute inset-0 bg-white/20"
-                                            initial={{ x: '-100%' }}
-                                            whileHover={{ x: '100%' }}
-                                            transition={{ duration: 0.6 }}
-                                        />
-                                    </Button>
-                                </motion.form>
+                            <div className="flex items-center gap-6 max-w-sm w-full">
+                                <DashboardSearch 
+                                    value={searchQuery}
+                                    onChange={setSearchQuery}
+                                    placeholder="Search entries..."
+                                    className="max-w-full"
+                                />
                             </div>
                         </div>
 
@@ -642,10 +589,13 @@ export default function AdminDashboard() {
                                                                     </Badge>
                                                                 </div>
                                                                 <div className="flex items-center gap-4 text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">
-                                                                    <div className="flex items-center gap-1.5">
-                                                                        <Users className="h-3 w-3" />
-                                                                        {resource.profiles?.full_name}
-                                                                    </div>
+                                                                    <button 
+                                                                        onClick={() => resource.profiles && handleUploaderClick(resource.profiles as unknown as Profile)}
+                                                                        className="flex items-center gap-1.5 hover:text-primary transition-colors group/user"
+                                                                    >
+                                                                        <Users className="h-3 w-3 group-hover/user:scale-110 transition-transform" />
+                                                                        <span className="underline decoration-dotted underline-offset-4">{resource.profiles?.full_name}</span>
+                                                                    </button>
                                                                     <div className="h-1 w-1 rounded-full bg-border" />
                                                                     <div className="flex items-center gap-1.5">
                                                                         <Clock className="h-3 w-3" />
@@ -1164,6 +1114,73 @@ export default function AdminDashboard() {
                                 Cancel
                             </Button>
                         </DialogFooter>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* User Detail Dialog */}
+            <Dialog open={isUserDetailOpen} onOpenChange={setIsUserDetailOpen}>
+                <DialogContent className="max-w-[380px] rounded-[2rem] p-0 overflow-hidden border-border/40 bg-white dark:bg-slate-900 shadow-2xl">
+                    <div className="relative p-8 space-y-6">
+                        {/* Background Decoration */}
+                        <div className="absolute top-0 right-0 p-16 opacity-5 pointer-events-none">
+                            <Users className="h-32 w-32 text-primary" />
+                        </div>
+                        
+                        <div className="flex flex-col items-center text-center space-y-4 relative z-10">
+                            <div className="relative group">
+                                <div className="h-24 w-24 rounded-3xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center overflow-hidden transition-all group-hover:scale-105 group-hover:border-primary/40">
+                                    {selectedUploader?.avatar_url ? (
+                                        <img src={selectedUploader.avatar_url} alt={selectedUploader.full_name} className="h-full w-full object-cover" />
+                                    ) : (
+                                        <Users className="h-10 w-10 text-primary/40" />
+                                    )}
+                                </div>
+                                <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-green-500 border-4 border-white dark:border-slate-900 shadow-lg" />
+                            </div>
+
+                            <div className="space-y-1">
+                                <h3 className="text-xl font-black tracking-tighter uppercase text-slate-900 dark:text-white leading-none">
+                                    {selectedUploader?.full_name}
+                                </h3>
+                                <div className="flex items-center justify-center gap-2">
+                                    <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest text-primary border-primary/20 bg-primary/5 px-2.5 py-0.5 rounded-full">
+                                        Member since {selectedUploader?.created_at ? new Date(selectedUploader.created_at).getFullYear() : '2024'}
+                                    </Badge>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 relative z-10">
+                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-border/40 text-center">
+                                <p className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-1">Study Level</p>
+                                <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tighter">Year {selectedUploader?.year || 'N/A'}</p>
+                            </div>
+                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-border/40 text-center">
+                                <p className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-1">Uploads</p>
+                                <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tighter">{selectedUploader?.resources?.[0]?.count || 0} Materials</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2.5 relative z-10">
+                            <p className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+                                <FileText className="h-2.5 w-2.5" />
+                                Member Biography
+                            </p>
+                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-border/40">
+                                <p className="text-[10px] font-bold text-muted-foreground/80 leading-relaxed italic line-clamp-3">
+                                    "{selectedUploader?.bio || 'This member hasn\'t shared a bio yet.'}"
+                                </p>
+                            </div>
+                        </div>
+
+                        <Button 
+                            variant="ghost" 
+                            className="w-full h-10 rounded-xl font-black text-[9px] uppercase tracking-widest text-muted-foreground hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
+                            onClick={() => setIsUserDetailOpen(false)}
+                        >
+                            Close Profile
+                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>

@@ -35,15 +35,6 @@ async function getLanderData() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   
-  if (user) {
-    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-    if (profile?.role === 'admin') {
-      redirect('/admin')
-    } else {
-      redirect('/dashboard')
-    }
-  }
-
   const { count: resourcesCount } = await supabase.from('resources').select('*', { count: 'exact', head: true }).eq('status', 'approved')
 
   const { count: usersCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true })
@@ -64,7 +55,15 @@ async function getLanderData() {
     }
   }
 
+  let role = null
+  if (user) {
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    role = profile?.role
+  }
+
   return {
+    user,
+    role,
     resources: resourcesCount || 0,
     users: usersCount || 0,
     downloads: totalDownloads,
@@ -94,6 +93,8 @@ export default async function Home() {
       stats={stats} 
       mappedSpecialties={mappedSpecialties} 
       specialtyCounts={data.specialtyCounts} 
+      user={data.user}
+      userRole={data.role}
     />
   )
 }

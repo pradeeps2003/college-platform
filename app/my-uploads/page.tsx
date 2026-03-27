@@ -161,23 +161,23 @@ export default function MyUploadsPage() {
                         <Table>
                             <TableHeader className="bg-slate-50/50 dark:bg-white/5">
                                 <TableRow className="border-border/40 hover:bg-transparent">
-                                    <TableHead className="py-6 px-8 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Document Details</TableHead>
-                                    <TableHead className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</TableHead>
-                                    <TableHead className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Uploaded</TableHead>
-                                    <TableHead className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Reach</TableHead>
-                                    <TableHead className="text-right px-8 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Actions</TableHead>
+                                    <TableHead className="py-4 px-6 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Document Details</TableHead>
+                                    <TableHead className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Status</TableHead>
+                                    <TableHead className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Uploaded</TableHead>
+                                    <TableHead className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Reach</TableHead>
+                                    <TableHead className="text-right px-6 text-[9px] font-black uppercase tracking-widest text-muted-foreground">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {loading ? (
                                     Array(3).fill(0).map((_, i) => (
                                         <TableRow key={i} className="animate-pulse">
-                                            <TableCell colSpan={5} className="py-12 px-8">
+                                            <TableCell colSpan={5} className="py-8 px-6">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="h-12 w-12 rounded-2xl bg-muted/50" />
+                                                    <div className="h-10 w-10 rounded-2xl bg-muted/50" />
                                                     <div className="space-y-2">
-                                                        <div className="h-4 w-48 bg-muted/50 rounded-full" />
-                                                        <div className="h-3 w-32 bg-muted/30 rounded-full" />
+                                                        <div className="h-3 w-40 bg-muted/50 rounded-full" />
+                                                        <div className="h-2 w-24 bg-muted/30 rounded-full" />
                                                     </div>
                                                 </div>
                                             </TableCell>
@@ -185,17 +185,17 @@ export default function MyUploadsPage() {
                                     ))
                                 ) : uploads.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={5} className="py-32 px-8">
+                                        <TableCell colSpan={5} className="py-24 px-6">
                                             <div className="flex flex-col items-center justify-center text-center space-y-6">
-                                                <div className="h-20 w-20 rounded-[2rem] bg-indigo-500/5 flex items-center justify-center border border-indigo-500/10">
-                                                    <Archive className="h-10 w-10 text-indigo-500 opacity-40" />
+                                                <div className="h-16 w-16 rounded-[1.5rem] bg-indigo-500/5 flex items-center justify-center border border-indigo-500/10">
+                                                    <Archive className="h-8 w-8 text-indigo-500 opacity-40" />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <h3 className="text-xl font-bold">No Documents Yet</h3>
-                                                    <p className="text-muted-foreground text-sm max-w-xs mx-auto font-medium">Your uploaded study materials will appear here once you start sharing.</p>
+                                                    <h3 className="text-lg font-bold">No Documents Yet</h3>
+                                                    <p className="text-muted-foreground text-xs max-w-xs mx-auto font-medium">Your uploaded study materials will appear here once you start sharing.</p>
                                                 </div>
                                                 <Link href="/upload">
-                                                    <Button variant="outline" className="rounded-xl px-8 h-12 border-border/60 font-bold text-xs uppercase tracking-widest">
+                                                    <Button variant="outline" className="rounded-xl px-6 h-10 border-border/60 font-bold text-[10px] uppercase tracking-widest">
                                                         Start Sharing
                                                     </Button>
                                                 </Link>
@@ -208,17 +208,17 @@ export default function MyUploadsPage() {
                                             key={resource.id} 
                                             className="border-border/40 hover:bg-white/50 dark:hover:bg-white/5 transition-colors group"
                                         >
-                                            <TableCell className="py-6 px-8">
-                                                <div className="flex items-center gap-5">
-                                                    <div className="h-14 w-14 rounded-2xl bg-primary/5 flex items-center justify-center border border-primary/10 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                                                        <FileText className="h-6 w-6" />
+                                            <TableCell className="py-4 px-6">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="h-10 w-10 rounded-xl bg-primary/5 flex items-center justify-center border border-primary/10 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                                                        <FileText className="h-4 w-4" />
                                                     </div>
                                                     <div>
-                                                        <p className="font-bold text-slate-900 dark:text-white text-lg tracking-tight line-clamp-1">{resource.title}</p>
-                                                        <div className="flex items-center gap-2 mt-1">
-                                                            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{resource.subject}</span>
+                                                        <p className="font-bold text-slate-900 dark:text-white text-sm tracking-tight line-clamp-1">{resource.title}</p>
+                                                        <div className="flex items-center gap-2 mt-0.5">
+                                                            <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60">{resource.subject}</span>
                                                             <span className="h-1 w-1 rounded-full bg-border" />
-                                                            <span className="text-[10px] font-bold uppercase tracking-widest text-primary">{resource.department}</span>
+                                                            <span className="text-[9px] font-bold uppercase tracking-widest text-primary">{resource.department}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -227,7 +227,7 @@ export default function MyUploadsPage() {
                                                 <Badge 
                                                     variant="outline"
                                                     className={cn(
-                                                        "uppercase tracking-widest text-[9px] py-1 px-4 rounded-full font-bold border-none",
+                                                        "uppercase tracking-widest text-[8px] py-0.5 px-3 rounded-full font-bold border-none",
                                                         resource.status === 'approved' ? 'bg-green-500/10 text-green-600' :
                                                         resource.status === 'rejected' ? 'bg-red-500/10 text-red-600' : 
                                                         'bg-orange-500/10 text-orange-600'
@@ -236,34 +236,34 @@ export default function MyUploadsPage() {
                                                     {resource.status === 'rejected' ? 'Declined' : resource.status}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell className="font-medium text-sm text-muted-foreground">
+                                            <TableCell className="font-medium text-[11px] text-muted-foreground">
                                                 {formatDistanceToNow(new Date(resource.created_at))} ago
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center gap-2">
-                                                    <div className="h-8 w-8 rounded-lg bg-secondary/50 flex items-center justify-center border border-border/50">
-                                                        <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />
+                                                    <div className="h-7 w-7 rounded-lg bg-secondary/50 flex items-center justify-center border border-border/50">
+                                                        <TrendingUp className="h-3 w-3 text-muted-foreground" />
                                                     </div>
-                                                    <span className="font-bold tabular-nums text-lg">{resource.download_count}</span>
+                                                    <span className="font-black tabular-nums text-sm">{resource.download_count}</span>
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="text-right px-8">
-                                                <div className="flex items-center justify-end gap-2">
+                                            <TableCell className="text-right px-6">
+                                                <div className="flex items-center justify-end gap-1.5">
                                                     <Button 
                                                         variant="ghost" 
                                                         size="icon" 
                                                         onClick={() => handleOpenDialog(resource)}
-                                                        className="h-11 w-11 rounded-2xl hover:bg-primary/5 hover:text-primary transition-all active:scale-90 border border-transparent hover:border-primary/20"
+                                                        className="h-9 w-9 rounded-xl hover:bg-primary/5 hover:text-primary transition-all active:scale-90 border border-transparent hover:border-primary/20"
                                                     >
-                                                        <Eye className="h-5 w-5" />
+                                                        <Eye className="h-4 w-4" />
                                                     </Button>
                                                     <Button 
                                                         variant="ghost" 
                                                         size="icon" 
                                                         onClick={() => handleDeleteResource(resource)}
-                                                        className="h-11 w-11 rounded-2xl hover:bg-red-500/5 hover:text-red-500 transition-all active:scale-90 border border-transparent hover:border-red-500/20"
+                                                        className="h-9 w-9 rounded-xl hover:bg-red-500/5 hover:text-red-500 transition-all active:scale-90 border border-transparent hover:border-red-500/20"
                                                     >
-                                                        <Trash2 className="h-5 w-5" />
+                                                        <Trash2 className="h-4 w-4" />
                                                     </Button>
                                                 </div>
                                             </TableCell>
@@ -346,15 +346,7 @@ export default function MyUploadsPage() {
                                 </div>
                             </div>
 
-                            <DialogFooter className="pt-2 flex flex-col gap-2">
-                                <Button 
-                                    variant="outline" 
-                                    onClick={() => selectedDocument && handleDeleteResource(selectedDocument)}
-                                    className="w-full h-11 rounded-2xl font-bold border-red-500/20 text-red-500 hover:bg-red-500/5 transition-all text-xs uppercase tracking-widest"
-                                >
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Delete Document
-                                </Button>
+                            <DialogFooter className="pt-2">
                                 <DialogClose asChild>
                                     <Button variant="ghost" className="w-full h-11 rounded-2xl font-bold hover:bg-slate-100 dark:hover:bg-white/5 transition-all text-xs uppercase tracking-widest text-muted-foreground/60">
                                         Dismiss

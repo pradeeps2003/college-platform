@@ -37,6 +37,8 @@ export function Breadcrumbs() {
             </Link>
 
             {segments.map((segment, index) => {
+                if (segment === 'auth') return null
+
                 const href = `/${segments.slice(0, index + 1).join('/')}`
                 const isLast = index === segments.length - 1
                 const isId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(segment) || (!isNaN(Number(segment)) && segment.length > 5)

@@ -93,7 +93,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Floating Background Icons */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.03] dark:opacity-[0.05]">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.03] dark:opacity-[0.04]">
                 <Activity className="absolute top-[15%] left-[10%] h-32 w-32 rotate-12" />
                 <Stethoscope className="absolute bottom-[20%] right-[15%] h-40 w-40 -rotate-12" />
                 <AnatomicalHeart className="absolute top-[40%] right-[10%] h-48 w-48 rotate-45" />

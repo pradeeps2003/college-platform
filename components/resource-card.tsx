@@ -2,6 +2,7 @@
 
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { 
     Download, 
     FileText, 
@@ -178,70 +179,70 @@ export function ResourceCard({ resource }: { resource: Resource }) {
                                         <ShieldCheck className="ml-2 h-3 w-3 group-hover/details:scale-110 transition-transform" />
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="sm:max-w-md rounded-[2.5rem] border-border/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-2xl p-8 overflow-hidden">
-                                    <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pointer-events-none" />
-                                                                        <DialogHeader className="mb-8 relative z-10">
-                                        <div className="flex items-center gap-3 mb-5">
-                                            <div className="bg-primary/10 text-primary text-[9px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-lg flex items-center gap-2">
-                                                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                                                {resource.department}
+                                <DialogContent className="max-w-[380px] rounded-[2rem] p-0 overflow-hidden border-border/40 bg-white dark:bg-slate-900 shadow-2xl">
+                                    <div className="relative p-8 space-y-6">
+                                        <DialogHeader className="relative z-10 space-y-4 text-left">
+                                            <div className="flex items-center gap-2">
+                                                <Badge variant="outline" className="text-[7px] font-black uppercase tracking-[0.2em] text-primary border-primary/20 bg-primary/5 px-2.5 py-0.5 rounded-full shrink-0">
+                                                    {resource.department}
+                                                </Badge>
+                                                <Badge variant="outline" className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 border-border/40 px-2.5 py-0.5 rounded-full shrink-0">
+                                                    Level {resource.semester}
+                                                </Badge>
                                             </div>
-                                            <div className="bg-secondary/50 dark:bg-white/5 text-muted-foreground text-[9px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-lg border border-border/40">
-                                                Year {resource.semester}
+                                            <DialogTitle className="text-xl font-black tracking-tighter uppercase text-slate-900 dark:text-white leading-[1.1] text-left">
+                                                {resource.title}
+                                            </DialogTitle>
+                                        </DialogHeader>
+                                        
+                                        <div className="flex items-center justify-between gap-4 text-[8px] font-black uppercase tracking-widest text-muted-foreground/60 border-y border-border/40 py-4 relative z-10">
+                                            <div className="flex items-center gap-2.5 min-w-0">
+                                                <User className="h-3 w-3 text-primary/40 shrink-0" />
+                                                <span className="text-slate-900 dark:text-white tracking-tight truncate">{resource.profiles?.full_name || 'Verified Member'}</span>
                                             </div>
-                                        </div>
-                                        <DialogTitle className="text-xl md:text-2xl font-bold tracking-tight leading-[1.1] text-left line-clamp-2">
-                                            {resource.title}
-                                        </DialogTitle>
-                                    </DialogHeader>
-                                    
-                                    <div className="space-y-8 relative z-10">
-                                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-y border-border/40 py-5">
-                                            <div className="flex items-center gap-4">
-                                                <div className="p-3 bg-primary/5 rounded-2xl border border-primary/10 shadow-sm">
-                                                    <User className="h-4 w-4 text-primary" />
-                                                </div>
-                                                <div className="flex flex-col gap-0.5">
-                                                    <span className="text-[8px] opacity-60">Shared By</span>
-                                                    <span className="text-foreground tracking-tight line-clamp-1">{resource.profiles?.full_name || 'Verified Member'}</span>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-4 sm:text-right">
-                                                <div className="flex flex-col gap-0.5 sm:order-1 order-2">
-                                                    <span className="text-[8px] opacity-60">Uploaded On</span>
-                                                    <span className="text-foreground tracking-tight whitespace-nowrap">{format(new Date(resource.created_at), 'MMM d, yyyy')}</span>
-                                                </div>
-                                                <div className="p-3 bg-primary/5 rounded-2xl border border-primary/10 shadow-sm sm:order-2 order-1">
-                                                    <Calendar className="h-4 w-4 text-primary" />
-                                                </div>
+                                            <div className="flex items-center gap-2.5 shrink-0">
+                                                <Calendar className="h-3 w-3 text-primary/40" />
+                                                <span className="text-slate-900 dark:text-white tracking-tight">{format(new Date(resource.created_at), 'MMM d, yyyy')}</span>
                                             </div>
                                         </div>
 
-                                         <div className="grid grid-cols-2 gap-4 md:gap-6">
-                                            <div className="bg-slate-50 dark:bg-slate-800/40 p-5 md:p-6 rounded-[1.5rem] border border-border/40 hover:border-primary/20 transition-colors group/stat shadow-sm">
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <BookOpen className="h-3.5 w-3.5 text-primary/50 group-hover/stat:text-primary transition-colors" />
-                                                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-80">Subject</p>
+                                        <div className="grid grid-cols-2 gap-3 relative z-10">
+                                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-border/40 hover:border-primary/20 transition-all">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <BookOpen className="h-2.5 w-2.5 text-primary/40" />
+                                                    <p className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-widest">Subject</p>
                                                 </div>
-                                                <p className="font-bold text-sm md:text-base tracking-tight text-foreground line-clamp-1">{resource.subject}</p>
+                                                <p className="font-black text-xs tracking-tighter text-slate-900 dark:text-white uppercase line-clamp-1">{resource.subject}</p>
                                             </div>
-                                            <div className="bg-slate-50 dark:bg-slate-800/40 p-5 md:p-6 rounded-[1.5rem] border border-border/40 hover:border-primary/20 transition-colors group/stat shadow-sm">
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <Hash className="h-3.5 w-3.5 text-primary/50 group-hover/stat:text-primary transition-colors" />
-                                                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-80">Topic</p>
+                                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-border/40 hover:border-primary/20 transition-all">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <Hash className="h-2.5 w-2.5 text-primary/40" />
+                                                    <p className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-widest">Topic</p>
                                                 </div>
-                                                <p className="font-bold text-sm md:text-base tracking-tight text-foreground line-clamp-1">{resource.topic || 'General'}</p>
+                                                <p className="font-black text-xs tracking-tighter text-slate-900 dark:text-white uppercase line-clamp-1">{resource.topic || 'General'}</p>
                                             </div>
                                         </div>
 
-                                        <div className="bg-primary/5 p-6 md:p-8 rounded-[2rem] border-l-4 border-primary/80 shadow-[inset_0_0_20px_rgba(0,0,0,0.02)]">
-                                            <h3 className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.3em] text-primary mb-3 opacity-90">
-                                                <Microscope className="h-3.5 w-3.5" />
-                                                Description
+                                        <div className="p-5 rounded-2xl bg-primary/5 border border-primary/10 relative z-10">
+                                            <h3 className="flex items-center gap-2 text-[7px] font-black uppercase tracking-[0.3em] text-primary mb-2">
+                                                <Microscope className="h-2.5 w-2.5" />
+                                                Material Specs
                                             </h3>
-                                            <p className="text-xs md:text-sm text-foreground/90 leading-relaxed font-medium">
-                                                {resource.description || 'No specific description has been provided for this material.'}
+                                            <p className="text-[10px] font-bold text-muted-foreground/80 leading-relaxed italic line-clamp-4">
+                                                "{resource.description || 'No specific description provided.'}"
                                             </p>
+                                        </div>
+
+                                        <div className="pt-2 relative z-10">
+                                            <Button 
+                                                variant="ghost" 
+                                                className="w-full h-10 rounded-xl font-black text-[9px] uppercase tracking-widest text-muted-foreground hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all text-center"
+                                                onClick={() => {
+                                                    // Dismmiss handled by Radix
+                                                }}
+                                            >
+                                                Close Details
+                                            </Button>
                                         </div>
                                     </div>
                                 </DialogContent>
