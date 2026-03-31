@@ -146,7 +146,7 @@ function LoginContent() {
                             <Button 
                                 type="button" 
                                 variant="outline" 
-                                className="w-full h-9 rounded-lg border-input bg-background hover:bg-muted/50 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium"
+                                className="w-full h-9 rounded-lg border-border bg-secondary/50 hover:bg-secondary/80 text-secondary-foreground hover:text-secondary-foreground transition-all duration-310 flex items-center justify-center gap-2 text-sm font-semibold shadow-sm active:scale-[0.98]"
                                 onClick={handleGoogleLogin}
                             >
                                 <svg className="h-4 w-4" viewBox="0 0 24 24">

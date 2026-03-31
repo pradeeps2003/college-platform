@@ -144,7 +144,7 @@ export function HomeClient({ stats, mappedSpecialties, specialtyCounts, user, us
                   <Button
                     size="lg"
                     variant="outline"
-                    className="rounded-2xl px-10 h-14 border-border/60 hover:border-primary/50 dark:border-white/10 dark:hover:border-primary/50 bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground dark:text-white font-bold text-xs transition-all active:scale-95 uppercase tracking-widest hover:bg-primary/5 dark:hover:bg-primary/10 shadow-lg relative z-10"
+                    className="rounded-2xl px-10 h-14 border-border/80 hover:border-primary/50 dark:border-white/10 dark:hover:border-primary/50 bg-secondary/30 dark:bg-white/5 backdrop-blur-md text-foreground dark:text-white hover:text-foreground dark:hover:text-white font-bold text-xs transition-all duration-310 active:scale-95 uppercase tracking-widest hover:bg-secondary/50 dark:hover:bg-primary/10 shadow-lg relative z-10"
                   >
                     Go to Dashboard
                   </Button>
@@ -154,7 +154,7 @@ export function HomeClient({ stats, mappedSpecialties, specialtyCounts, user, us
                   <Button
                     size="lg"
                     variant="outline"
-                    className="rounded-2xl px-10 h-14 border-border/60 hover:border-primary/50 dark:border-white/10 dark:hover:border-primary/50 bg-white/50 dark:bg-white/5 backdrop-blur-md text-foreground dark:text-white font-bold text-xs transition-all active:scale-95 uppercase tracking-widest hover:bg-primary/5 dark:hover:bg-primary/10 shadow-lg relative z-10"
+                    className="rounded-2xl px-10 h-14 border-border/80 hover:border-primary/50 dark:border-white/10 dark:hover:border-primary/50 bg-secondary/30 dark:bg-white/5 backdrop-blur-md text-foreground dark:text-white hover:text-foreground dark:hover:text-white font-bold text-xs transition-all duration-310 active:scale-95 uppercase tracking-widest hover:bg-secondary/50 dark:hover:bg-primary/10 shadow-lg relative z-10"
                   >
                     Join Community
                   </Button>
