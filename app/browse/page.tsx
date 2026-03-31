@@ -96,7 +96,7 @@ async function getFilterOptions(supabase: any) {
 
     let departments: { name: string; icon: React.ReactNode }[] = []
     if (specTableData && specTableData.length > 0) {
-        departments = specTableData.map(spec => ({
+        departments = specTableData.map((spec: { name: string; icon_name: string }) => ({
             name: spec.name,
             icon: getCategoryIcon(spec.name),
         }))
@@ -105,8 +105,8 @@ async function getFilterOptions(supabase: any) {
             .from('resources')
             .select('department')
             .eq('status', 'approved')
-        departments = [...new Set(deptData?.map(d => d.department))]
-            .filter(Boolean)
+        departments = [...new Set((deptData || []).map((d: any) => d.department))]
+            .filter((name): name is string => Boolean(name))
             .sort()
             .map(name => ({ name, icon: getCategoryIcon(name) }))
     }
